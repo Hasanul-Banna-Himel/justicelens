@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --aj-dark-primary: #404040;
+  --aj-dark-secondary: #303030;
+
+  --aj-parrot-primary: #f4ffac;
+  --aj-parrot-secondary: #fcfffa;
+
+  --aj-light: #ffffff;
+
+  --aj-green-primary: #37402b;
+  --aj-green-secondary: #e9ece5;
+
+  --aj-cream: #f2f0eb;
+
+  // default light theme
+  --aj-background: var(--aj-cream);
+  --aj-background-substitute: var(--aj-parrot-secondary);
+  --aj-foreground: var(--aj-dark-primary);
+  --aj-primary: var(--aj-green-primary);
+  --aj-primary-substitute: var(--aj-green-secondary);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    // default dark theme
+    --aj-background: var(--aj-dark-primary);
+    --aj-background-substitute: var(--aj-dark-secondary);
+    --aj-foreground: var(--aj-light);
+    --aj-primary: var(--aj-parrot-primary);
+    --aj-primary-substitute: var(--aj-parrot-secondary);
+  }
+}
+
+// .light,
+[data-theme="light"] {
+  --aj-background: var(--aj-cream);
+  --aj-background-substitute: var(--aj-parrot-secondary);
+  --aj-foreground: var(--aj-dark-primary);
+  --aj-primary: var(--aj-green-primary);
+  --aj-primary-substitute: var(--aj-green-secondary);
+}
+
+// .dark,
+[data-theme="dark"] {
+  --aj-background: var(--aj-dark-primary);
+  --aj-background-substitute: var(--aj-dark-secondary);
+  --aj-foreground: var(--aj-light);
+  --aj-primary: var(--aj-parrot-primary);
+  --aj-primary-substitute: var(--aj-green-secondary);
+}
+
+html {
+  color: var(--aj-foreground);
+  background: var(--aj-background);
+  font-family: var(--font-secondary);
+}
