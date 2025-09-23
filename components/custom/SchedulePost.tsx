@@ -1,145 +1,133 @@
+import { useAuth } from "@/contexts/authContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { dayType, postInterface } from "@/types";
-import { functions } from "@/utils/firebase";
-import { FontAwesome6, Ionicons } from "@expo/vector-icons";
-import { httpsCallable } from "firebase/functions";
+import { postInterface } from "@/types";
+import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import React from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function SchedulePost({
   postData,
-  today,
 }: {
   postData: postInterface;
-  today: dayType;
 }) {
   const theme = useThemeColor();
-
-  const onNudge = () => {
-    const sendNudgeNotification = httpsCallable(
-      functions,
-      "sendNudgeNotification"
-    );
-    sendNudgeNotification({ author_uid: postData.author_uid })
-      .then((result) => {
-        console.log("Nudge sent successfully:", result);
-      })
-      .catch((error) => {
-        console.error("Error sending nudge:", error);
-      });
-  };
+  const { usersDataGlobal } = useAuth();
 
   return (
-    postData?.times?.[today]?.starts && (
-      <View style={[l_styles.post_container]}>
-        <View>
-          <View
-            style={[l_styles.post_icon, { backgroundColor: theme.gray_light }]}
-          >
-            {postData?.gender === "male" ? (
-              <Ionicons name="man" size={28} color={theme.primary} />
-            ) : (
-              <Ionicons name="woman" size={28} color={theme.primary} />
-            )}
-            <Text
-              style={[
-                {
-                  fontSize: 8,
-                  textAlign: "center",
-                  textTransform: "capitalize",
-                },
-                { color: theme?.primary },
-              ]}
-            >
-              {postData?.gender}
-            </Text>
-          </View>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: theme.background_substitute },
+      ]}
+    >
+      <View style={styles.header}>
+        <View style={styles.authorInfo}>
+          <Image
+            source={{
+              uri:
+                usersDataGlobal?.find((el) => el.uid === postData?.author_uid)
+                  ?.photoURL ??
+                "https://images.unsplash.com/photo-1541140134513-85a161dc4a00?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            }}
+            style={styles.avatar}
+          />
+          <Text style={[styles.authorName, { color: theme.text }]}>
+            {usersDataGlobal?.find((el) => el.uid === postData?.author_uid)
+              ?.displayName || "User Name"}
+          </Text>
         </View>
-        <View style={[l_styles.post_content]}>
-          <View style={[l_styles.post_title]}>
-            <Text style={[l_styles.post_title_text, { color: theme?.text }]}>
-              EWU
-            </Text>
-            <FontAwesome6
-              name="arrow-right-arrow-left"
-              size={16}
-              color={theme.text}
-            />
-            <Text style={[l_styles.post_title_text, { color: theme?.text }]}>
-              {postData?.thana}
-            </Text>
-          </View>
-          <View>
-            <Text style={[l_styles.post_sub_text, { color: theme?.text }]}>
-              Travels With: {postData.transportation}
-            </Text>
-          </View>
+        <Text style={[styles.title, { color: theme.text }]}>
+          {postData?.title}
+        </Text>
+        <Text style={[styles.description, { color: theme.text }]}>
+          {postData?.description}
+        </Text>
+      </View>
 
-          <View>
-            <Text style={[l_styles.post_sub_text, { color: theme?.text }]}>
-              Usual Travel Time:
-            </Text>
-            <Text style={[l_styles.post_sub_text, { color: theme?.text }]}>
-              {postData?.times?.[today]?.starts}-
-              {postData?.times?.[today]?.ends}
-            </Text>
-          </View>
+      {postData?.image && (
+        <View style={styles.postImageContainer}>
+          <Image
+            source={{
+              uri:
+                postData?.image ??
+                "https://images.unsplash.com/photo-1541140134513-85a161dc4a00?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            }}
+            style={styles.postImage}
+            contentFit="cover"
+          />
         </View>
-        <View>
-          <Pressable
-            style={[
-              l_styles.post_button,
-              { backgroundColor: theme.gray_light },
-            ]}
-            onPress={onNudge}
-          >
-            <Text
-              style={[l_styles.post_button_text, { color: theme?.secondary }]}
-            >
-              Nudge
-            </Text>
-          </Pressable>
+      )}
+
+      <View style={styles.footer}>
+        <View style={styles.actionsContainer}>
+          <View style={styles.actionItem}>
+            <Ionicons name="arrow-up" size={24} color={theme.text} />
+          </View>
+          <View style={styles.actionItem}>
+            <Ionicons name="chatbubble-outline" size={24} color={theme.text} />
+          </View>
+          <View style={styles.actionItem}>
+            <Ionicons name="arrow-down" size={24} color={theme.text} />
+          </View>
         </View>
       </View>
-    )
+    </View>
   );
 }
 
-const l_styles = StyleSheet.create({
-  post_container: {
-    flexDirection: "row",
-    paddingHorizontal: 16,
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 16,
+    marginHorizontal: 12,
+    borderRadius: 16,
     gap: 16,
-    marginVertical: 8,
   },
-  post_icon: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  post_content: {
-    paddingVertical: 4,
-    flex: 1,
-    maxWidth: 198,
-  },
-  post_title: {
-    flexDirection: "row",
-    gap: 4,
-  },
-  post_title_text: {
-    fontSize: 16,
-    fontWeight: 500,
-  },
-  post_sub_text: {
-    fontSize: 14,
-  },
-  post_button: {
-    paddingVertical: Platform.OS === "android" ? 6 : 8,
+  header: {
     paddingHorizontal: 16,
-    borderRadius: 12,
+    paddingTop: 16,
+    gap: 8,
   },
-  post_button_text: {
-    fontSize: 14,
-    fontWeight: 500,
+  authorInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  avatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+  },
+  authorName: {
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  description: {
+    fontSize: 16,
+  },
+  postImageContainer: {
+    aspectRatio: 16 / 9,
+    width: "100%",
+  },
+  postImage: {
+    width: "100%",
+    height: "100%",
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  actionsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  actionItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
