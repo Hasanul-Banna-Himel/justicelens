@@ -1,11 +1,6 @@
 import { AuthContextProps, CustomUser, DBUserInterface } from "@/types";
 import { auth, db } from "@/utils/firebase";
-import {
-  validateEmail,
-  validateStudentIDReturnEmail,
-} from "@/utils/functions/validation";
-import * as Device from "expo-device";
-import * as Notifications from "expo-notifications";
+import { validateEmail } from "@/utils/functions/validation";
 import { router } from "expo-router";
 import {
   createUserWithEmailAndPassword,
@@ -15,7 +10,14 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+} from "firebase/firestore";
 import React, {
   createContext,
   ReactNode,
@@ -29,44 +31,11 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<CustomUser | null>(null);
   const [DBuser, setDBUser] = useState<DBUserInterface | null>(null);
+  const [usersDataGlobal, setUsersDataGlobal] = useState<DBUserInterface[]>([]);
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState<Error>();
-
-  const registerForPushNotificationsAsync = async (userId: string) => {
-    if (!Device.isDevice) {
-      console.log("Push notifications only work on physical devices.");
-      return;
-    }
-
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== "granted") {
-      console.log("Failed to get push token for push notification!");
-      return;
-    }
-
-    try {
-      const token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log("Obtained push token:", token);
-
-      if (token) {
-        const userDocRef = doc(db, "users", userId);
-        await updateDoc(userDocRef, {
-          expoPushToken: token,
-        });
-      }
-    } catch (error) {
-      console.error("Error getting or saving push token", error);
-    }
-  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -76,9 +45,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const userData = userDoc.exists()
             ? (userDoc.data() as DBUserInterface)
             : null;
-
-          // ==> Register for push notifications right after user is loaded <==
-          await registerForPushNotificationsAsync(firebaseUser.uid);
 
           setUser({
             uid: firebaseUser.uid,
@@ -113,10 +79,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [user]);
 
-  const signIn = async (id: string, password: string) => {
+  useEffect(() => {
+    const getUserData = (): DBUserInterface[] => {
+      try {
+        async function dataCallSeries() {
+          const data: DBUserInterface[] = [];
+
+          const q = query(collection(db, "users"));
+
+          const querySnapshot = await getDocs(q);
+          querySnapshot.forEach((doc) => {
+            data.push({ ...doc.data(), uid: doc.id } as DBUserInterface);
+          });
+          return data.filter((post) => post.uid !== DBuser?.uid);
+        }
+
+        if (DBuser?.emailVerified) {
+          Promise.resolve(dataCallSeries()).then((value) => {
+            setUsersDataGlobal(value);
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
+      return [];
+    };
+    if (DBuser?.emailVerified && DBuser?.uid) {
+      getUserData();
+    }
+  }, [DBuser?.emailVerified, DBuser?.uid]);
+
+  const signIn = async (email: string, password: string) => {
     setError(undefined);
 
-    const email = validateStudentIDReturnEmail(id);
     if (!validateEmail(email)) {
       setError(
         new Error("Invalid Student Email Format", {
@@ -140,18 +136,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (e) {
       setError(e as Error);
+      setLoading(false);
     }
   };
 
   const signUp = async (
     firstName: string,
     lastName: string,
-    id: string,
+    email: string,
     password: string
   ) => {
     setLoading(true);
     setError(undefined);
-    const email = validateStudentIDReturnEmail(id);
     if (!validateEmail(email)) {
       setError(
         new Error("Invalid Student Email Format", {
@@ -198,6 +194,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (e) {
       setError(e as Error);
       console.error("Error signing up:", e);
+      setLoading(false);
     }
   };
 
@@ -238,7 +235,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!DBuser?.uid) return;
     setLoading(true);
     try {
-      const docRef = doc(db, "posts", DBuser.uid);
+      const docRef = doc(db, "users", DBuser.uid);
       await setDoc(docRef, JSON.parse(JSON.stringify(user_data)), {
         merge: true,
       });
@@ -257,6 +254,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         user,
         DBuser,
+        usersDataGlobal,
         initialLoading,
         loading,
         emailSent,

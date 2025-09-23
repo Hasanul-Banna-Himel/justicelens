@@ -9,17 +9,15 @@ import {
   useState,
 } from "react";
 import { useAuth } from "./authContext";
-import { useGlobalDataContext } from "./globalDataContext";
 
 const PostContext = createContext<postContextProps | undefined>(undefined);
 
 export const PostProvider = ({ children }: { children: ReactNode }) => {
   const [PostArray, setPostArray] = useState<postInterface[]>([]);
-  const [userSchedule, setUserSchedule] = useState<postInterface>();
+  const [userPosts, setUserPosts] = useState<postInterface[]>([]);
   const [postError, setPostError] = useState<Error>();
   const [loadingPosts, setLoadingPosts] = useState<boolean>(false);
   const { DBuser } = useAuth();
-  const { loading, semester } = useGlobalDataContext();
 
   useEffect(() => {
     const getPostData = (): postInterface[] => {
@@ -34,17 +32,11 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
           querySnapshot.forEach((doc) => {
             data.push({ ...doc.data(), pid: doc.id } as postInterface);
           });
-          const usersPost = data.find(
+          const usersPost = data.filter(
             (post) => post.author_uid === DBuser?.uid
           );
-          setUserSchedule(usersPost);
-          return data.filter(
-            (post) =>
-              (post.preferredPartnerGender === "any" ||
-                post.preferredPartnerGender === usersPost?.gender) &&
-              post.author_uid !== DBuser?.uid &&
-              post.semester === semester
-          );
+          setUserPosts(usersPost);
+          return data.filter((post) => post.author_uid !== DBuser?.uid);
         }
 
         if (DBuser?.emailVerified) {
@@ -64,7 +56,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     if (DBuser?.emailVerified) {
       setPostArray(getPostData());
     }
-  }, [DBuser?.emailVerified, DBuser?.uid, loading, semester]);
+  }, [DBuser?.emailVerified, DBuser?.uid]);
 
   const getSearchFilteredPosts = (SearchText: string) => {
     if (SearchText)
@@ -74,18 +66,18 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     else return PostArray;
   };
 
-  const setMySchedule = async (schedule: postInterface) => {
+  const AddPost = async (post: postInterface) => {
     if (!DBuser?.uid) return;
 
     setLoadingPosts(true);
     try {
-      const docRef = doc(db, "posts", DBuser.uid);
-      await setDoc(docRef, schedule, { merge: true });
-      setUserSchedule(schedule);
+      const docRef = doc(db, "posts", post.pid);
+      await setDoc(docRef, post, { merge: true });
+      setUserPosts([post, ...userPosts]);
       setPostArray((prevPosts) => {
         const updatedPosts = prevPosts.map((post) => {
           if (post.author_uid === DBuser.uid) {
-            return schedule;
+            return post;
           }
           return post;
         });
@@ -103,9 +95,9 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
 
     setLoadingPosts(true);
     try {
-      const docRef = doc(db, "posts", DBuser.uid);
+      const docRef = doc(db, "posts", post.pid);
       await setDoc(docRef, post, { merge: true });
-      setUserSchedule(post);
+      setUserPosts(userPosts.filter((p) => p.pid !== post.pid).concat([post]));
       setPostArray((prevPosts) => {
         const updatedPosts = prevPosts.map((post) => {
           if (post.author_uid === DBuser.uid) {
@@ -127,10 +119,10 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     <PostContext.Provider
       value={{
         posts: PostArray,
-        userSchedule,
+        userPosts,
         loadingPosts,
         postError,
-        setMySchedule,
+        AddPost,
         updatePostData,
         getSearchFilteredPosts,
       }}
