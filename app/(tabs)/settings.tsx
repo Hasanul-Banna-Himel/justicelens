@@ -32,6 +32,7 @@ export default function SettingsScreens() {
       options: [
         {
           title: "Dark Mode",
+          onPress: () => toggleThemeColor(),
           icons: {
             left: "moon-outline",
           },
