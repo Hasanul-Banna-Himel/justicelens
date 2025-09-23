@@ -34,6 +34,7 @@ const StyledDatePicker: React.FC<StyledDatePickerProps> = ({
 }) => {
   const theme = useThemeColor();
   const [showPicker, setShowPicker] = useState(false);
+  const [StructuredDate, setStructuredDate] = useState<Date>();
 
   const [selectedDay, setSelectedDay] = useState<string>("");
   const [selectedMonth, setSelectedMonth] = useState<string>("");
@@ -119,6 +120,7 @@ const StyledDatePicker: React.FC<StyledDatePickerProps> = ({
     if (isNaN(date.getTime())) {
       date = new Date();
     }
+    setStructuredDate(date);
     setSelectedDay(String(date.getDate()).padStart(2, "0"));
     setSelectedMonth(months[date.getMonth()]);
     setSelectedYear(String(date.getFullYear()));
@@ -178,7 +180,7 @@ const StyledDatePicker: React.FC<StyledDatePickerProps> = ({
     />
   );
 
-  let displayDate = value ? new Date(value) : new Date();
+  let displayDate = StructuredDate ?? new Date();
   if (isNaN(displayDate.getTime())) {
     displayDate = new Date();
   }
