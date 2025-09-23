@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/authContext";
-import { usePostContext } from "@/contexts/postContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import ContainerGlobalClean from "@/layout/ContainerGlobalClean";
+import { getAge } from "@/utils/functions/generation";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router } from "expo-router";
@@ -10,7 +10,7 @@ import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 export default function ProfilesScreen() {
   const theme = useThemeColor();
   const { DBuser, signOut } = useAuth();
-  const { userSchedule } = usePostContext();
+
   return (
     <ContainerGlobalClean>
       <View style={styles.headerContainer}>
@@ -45,26 +45,26 @@ export default function ProfilesScreen() {
             </Text>
             <View style={[styles.detailsOption]}>
               <Text style={[styles.detailsKey, { color: theme.text }]}>
+                Age
+              </Text>
+              <Text style={[styles.detailsValue, { color: theme.text }]}>
+                {DBuser?.dob ? getAge(DBuser?.dob) : "--"} years
+              </Text>
+            </View>
+            <View style={[styles.detailsOption]}>
+              <Text style={[styles.detailsKey, { color: theme.text }]}>
                 Gender
               </Text>
               <Text style={[styles.detailsValue, { color: theme.text }]}>
-                {userSchedule?.gender}
+                {DBuser?.gender ?? "Not Disclosed"}
               </Text>
             </View>
             <View style={[styles.detailsOption]}>
               <Text style={[styles.detailsKey, { color: theme.text }]}>
-                Travels From
+                Institution
               </Text>
               <Text style={[styles.detailsValue, { color: theme.text }]}>
-                {userSchedule?.thana}, {userSchedule?.division}
-              </Text>
-            </View>
-            <View style={[styles.detailsOption]}>
-              <Text style={[styles.detailsKey, { color: theme.text }]}>
-                Prefers to travel with
-              </Text>
-              <Text style={[styles.detailsValue, { color: theme.text }]}>
-                {userSchedule?.preferredPartnerGender}
+                {DBuser?.institution ?? "Not Set"}
               </Text>
             </View>
           </View>
