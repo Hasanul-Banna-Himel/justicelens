@@ -3,14 +3,7 @@ import ContainerGlobalClean from "@/layout/ContainerGlobalClean";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import {
-  Alert,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function SettingsScreens() {
   const theme = useThemeColor();
@@ -31,7 +24,7 @@ export default function SettingsScreens() {
       options: [
         {
           title: "Delete Account",
-          onPress: () => Alert.alert("Delete Account", "Coming Soon!"),
+          onPress: () => router.push("/delete-account"),
           icons: {
             left: "trash-outline",
             right: "chevron-forward-sharp",
