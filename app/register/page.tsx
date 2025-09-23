@@ -11,6 +11,7 @@ export default function Register() {
   const [LastName, setLastName] = React.useState("");
   const [Email, setEmail] = React.useState("");
   const [Password, setPassword] = React.useState("");
+  // Profile picture upload deferred for later
 
   const [Error, setError] = React.useState<string | undefined>("");
   const [Loading, setLoading] = React.useState<boolean>(false);
@@ -126,6 +127,8 @@ export default function Register() {
             />
             {Error && <div className="error text-sm text-red-500">{Error}</div>}
           </div>
+
+          {/* Profile picture upload is disabled for now */}
 
           <button type="button" onClick={() => redirect("/login")}>
             Already have an account?

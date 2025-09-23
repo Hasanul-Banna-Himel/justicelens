@@ -27,11 +27,11 @@ export default function ProfilePictureUpload({ onUploadComplete }: ProfilePictur
     };
     reader.readAsDataURL(file);
 
-    // Upload to Cloudinary
+    // Upload to Storage and preview new URL
     const imageUrl = await handleProfileImageUploadCloudinary(
       file,
       profileData.uid,
-      () => {}, // setImageUrl - not needed since we're handling it manually
+      setPreviewUrl,
       setUploading,
       setError
     );

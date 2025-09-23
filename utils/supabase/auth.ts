@@ -32,7 +32,13 @@ export async function registerUserSupabase(
     }
 
     // If email confirmations are enabled, there may be no active session yet.
-    // Profile row will be created by DB trigger. Prompt user accordingly.
+    // We store a temporary flag so the app can prompt to upload profile pic on first login.
+    try {
+      if (authData?.user?.id) {
+        sessionStorage.setItem('pendingProfileSetup', 'yes')
+      }
+    } catch {}
+
     setLoading(false)
     setError(undefined)
     navigate('/login')
