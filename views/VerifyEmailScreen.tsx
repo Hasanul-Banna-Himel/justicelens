@@ -4,7 +4,7 @@ import ContainerGlobalClean from "@/layout/ContainerGlobalClean";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function VerifyEmailScreen() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const { sendVerificationEmail, loading, emailSent, error } = useAuth();
   return (
     <ContainerGlobalClean>

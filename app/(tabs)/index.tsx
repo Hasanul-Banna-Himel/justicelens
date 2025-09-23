@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { Platform, ScrollView, StyleSheet, Text } from "react-native";
 
 export default function HomeScreen() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const [POSTS, setPOSTS] = useState<postInterface[]>([]);
 
   const { posts: PostArray, loadingPosts } = usePostContext();
@@ -77,7 +77,8 @@ const styles = StyleSheet.create({
   scrollViewContainer: {
     flex: 1,
     paddingBottom: 0,
-    marginBottom: Platform.OS === "ios" ? 52 : 0,
+    marginTop: 8,
+    marginBottom: Platform.OS === "ios" ? 56 : 24,
   },
   inputStyles: {
     fontSize: 14,

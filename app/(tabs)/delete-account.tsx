@@ -14,7 +14,7 @@ import {
 } from "react-native";
 
 export default function DeleteAccount() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const { loading, error } = useAuth();
 
   const [Password, setPassword] = useState<string>("");

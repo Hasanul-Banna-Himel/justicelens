@@ -14,7 +14,7 @@ import {
 } from "react-native";
 
 export default function SignupPage() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const { loading, error, signUp } = useAuth();
 
   const [FirstName, setFirstName] = useState<string>("");

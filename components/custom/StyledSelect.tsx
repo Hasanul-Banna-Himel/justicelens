@@ -28,7 +28,7 @@ const StyledSelect: React.FC<StyledSelectProps> = ({
   labelBackgroundColor,
   options,
 }) => {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const [showPicker, setShowPicker] = useState(false);
 
   const renderPickerColumn = (

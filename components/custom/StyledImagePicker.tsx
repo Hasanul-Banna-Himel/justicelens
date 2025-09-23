@@ -20,7 +20,7 @@ const StyledImagePicker: React.FC<StyledImagePickerProps> = ({
   placeholder = "Select an image",
   labelBackgroundColor,
 }) => {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({

@@ -14,7 +14,7 @@ import {
 } from "react-native";
 
 export default function SigninPage() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const { loading, error, signIn } = useAuth();
 
   const [Email, setEmail] = useState<string>("");

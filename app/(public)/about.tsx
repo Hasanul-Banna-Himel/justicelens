@@ -6,7 +6,7 @@ import React from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function AboutScreen() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   return (
     <ContainerGlobalClean>
       <View style={styles.headerContainer}>

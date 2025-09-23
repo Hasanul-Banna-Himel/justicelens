@@ -18,7 +18,7 @@ const StyledInput: React.FC<StyledInputProps> = ({
   placeholder,
   labelBackgroundColor,
 }) => {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
 
   return (
     <View style={[styles.container]}>

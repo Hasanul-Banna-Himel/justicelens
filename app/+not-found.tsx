@@ -3,7 +3,7 @@ import { Link, Stack } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function NotFoundScreen() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   return (
     <>
       <Stack.Screen options={{ title: "Oops!" }} />

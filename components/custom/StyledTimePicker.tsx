@@ -26,7 +26,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
   label,
   labelBackgroundColor,
 }) => {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const [hour, setHour] = useState("12");
   const [minute, setMinute] = useState("00");
   const [amPm, setAmPm] = useState("AM");

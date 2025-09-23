@@ -32,7 +32,7 @@ const StyledDatePicker: React.FC<StyledDatePickerProps> = ({
   labelBackgroundColor,
   dropdownIconColor,
 }) => {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const [showPicker, setShowPicker] = useState(false);
   const [StructuredDate, setStructuredDate] = useState<Date>();
 

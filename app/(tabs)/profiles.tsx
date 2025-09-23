@@ -8,7 +8,7 @@ import { router } from "expo-router";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function ProfilesScreen() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const { DBuser, signOut } = useAuth();
 
   return (

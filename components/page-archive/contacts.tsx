@@ -1,32 +1,28 @@
 import { useAuth } from "@/contexts/authContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import ContainerGlobalClean from "@/layout/ContainerGlobalClean";
-import { db, functions } from "@/utils/firebase";
-import { dayType } from "@/types";
+import { db } from "@/utils/firebase";
 import { Image } from "expo-image";
 import {
   collection,
-  query,
-  where,
-  onSnapshot,
   DocumentData,
   getDocs,
+  onSnapshot,
+  query,
+  where,
 } from "firebase/firestore";
-import { httpsCallable } from "firebase/functions";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Platform,
-  Pressable,
   StyleSheet,
   Text,
   View,
-  ActivityIndicator,
-  Alert,
 } from "react-native";
 
 export default function ContactsScreen() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const { user, DBuser } = useAuth(); // Get DBuser to access schedule
   const [users, setUsers] = useState<DocumentData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -65,8 +61,6 @@ export default function ContactsScreen() {
     return () => unsubscribe();
   }, [user?.uid]);
 
-  
-
   const renderItem = ({ item }: { item: DocumentData }) => (
     <View style={[styles.contactContainer]}>
       <Image
@@ -86,7 +80,6 @@ export default function ContactsScreen() {
           {item.email}
         </Text>
       </View>
-      
     </View>
   );
 

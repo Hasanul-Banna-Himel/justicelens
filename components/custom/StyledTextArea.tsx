@@ -19,7 +19,7 @@ const StyledTextArea: React.FC<StyledTextAreaProps> = ({
   labelBackgroundColor,
   numberOfLines = 4,
 }) => {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
 
   return (
     <View style={[styles.container]}>

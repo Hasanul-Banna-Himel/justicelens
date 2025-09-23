@@ -11,7 +11,7 @@ export default function SchedulePost({
 }: {
   postData: postInterface;
 }) {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const { usersDataGlobal } = useAuth();
 
   return (

@@ -19,7 +19,7 @@ import {
 } from "react-native";
 
 export default function EditProfileScreen() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const { loading, DBuser, updateDBProfile, error } = useAuth();
 
   const [Gender, setGender] = useState(DBuser?.gender ?? "");

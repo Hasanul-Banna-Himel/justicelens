@@ -2,7 +2,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function LogoHeader() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
 
   return (
     <View style={[styles?.container]}>

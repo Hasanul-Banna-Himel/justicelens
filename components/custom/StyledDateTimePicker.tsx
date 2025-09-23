@@ -26,7 +26,7 @@ const StyledDateTimePicker: React.FC<StyledDateTimePickerProps> = ({
   labelBackgroundColor,
   dropdownIconColor,
 }) => {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const [hour, setHour] = useState("12");
   const [minute, setMinute] = useState("00");
   const [amPm, setAmPm] = useState("AM");

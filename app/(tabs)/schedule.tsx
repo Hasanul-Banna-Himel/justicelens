@@ -22,7 +22,7 @@ import {
 } from "react-native";
 
 export default function ScheduleScreen() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const DIVISIONData: DistrictData = dist;
   const { user } = useAuth();
   const { AddPost, loadingPosts, postError } = usePostContext();
