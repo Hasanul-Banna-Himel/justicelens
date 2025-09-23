@@ -10,7 +10,6 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "googleServicesFile": "./GoogleService-Info.plist",
       "bundleIdentifier": "dev.akhlak.justicelens.app"
     },
     "android": {
@@ -19,8 +18,10 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "googleServicesFile": "./google-services.json",
-      "package": "dev.akhlak.justicelens.app"
+      "package": "dev.akhlak.justicelens.app",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -52,7 +53,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "dd34010f-1378-4903-b380-b338b5b8ed09"
+        "projectId": "6449a6d0-b919-413f-94cc-2162cc653ab3"
       }
     },
     "owner": "akhlak"
