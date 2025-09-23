@@ -17,7 +17,7 @@ export default function SigninPage() {
   const theme = useThemeColor();
   const { loading, error, signIn } = useAuth();
 
-  const [ID, setID] = useState<string>("");
+  const [Email, setEmail] = useState<string>("");
   const [Password, setPassword] = useState<string>("");
 
   return (
@@ -35,16 +35,18 @@ export default function SigninPage() {
         <View style={[styles.form_container]}>
           <View style={[styles.input_container]}>
             <Text style={[styles.input_label, { color: theme?.text }]}>
-              Student ID:
+              Email:
             </Text>
             <TextInput
-              placeholder="0000-0-00-000"
+              placeholder="Enter your email"
               placeholderTextColor={theme.gray}
               style={[
                 styles.input_box,
                 { color: theme?.primary, borderColor: theme.text },
               ]}
-              onChangeText={(text) => setID(text)}
+              onChangeText={(text) => setEmail(text)}
+              keyboardType="email-address"
+              autoCapitalize="none"
             />
           </View>
           <View style={[styles.input_container]}>
@@ -69,7 +71,7 @@ export default function SigninPage() {
           )}
 
           <Pressable
-            onPress={() => signIn(ID, Password)}
+            onPress={() => signIn(Email, Password)}
             disabled={loading}
             style={[styles.submit_button, { backgroundColor: theme.primary }]}
           >
