@@ -2,59 +2,67 @@
 import { useApp } from "@/store";
 import React, { useEffect, useState } from "react";
 import CreatePost from "../posts/CreatePost";
-import { sendVerificationEmail } from "@/utils/userFunction";
-import { collection, getDocs, query } from "firebase/firestore";
-import { db } from "@/utils/firebase";
+import { supabase } from "@/utils/supabase";
 import PostView from "../posts/PostView";
 import { PostInterface } from "@/interfaces";
 
 export default function Feed() {
-  const [Sent, setSent] = useState<boolean>(false);
   const { profileData, loggedInStatus } = useApp();
-
   const [Data, setData] = useState<PostInterface[]>([]);
-  
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | undefined>();
 
   useEffect(() => {
-    try {
-      async function dataCallSeries() {
-        const data: PostInterface[] = [];
-        const q = query(collection(db, "posts"));
-
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-          data.push({ ...(doc.data() as PostInterface), pid: doc.id });
-        });
-        return data;
-      }
-
-      Promise.resolve(dataCallSeries()).then((value) => {
-        setData(value);
-      });
-    } catch (error) {
-      console.error(error);
-    }
+    fetchPosts();
   }, []);
 
-  console.log(Data);
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        throw error;
+      }
+
+      setData(data || []);
+      setError(undefined);
+    } catch (err: any) {
+      console.error('Error fetching posts:', err);
+      setError(err.message || 'Failed to fetch posts');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePostCreated = () => {
+    // Refresh posts after creating a new one
+    fetchPosts();
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-lg">Loading posts...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-red-500">Error: {error}</div>
+      </div>
+    );
+  }
 
   return (
     <>
       {loggedInStatus && (
-        <>
-          {profileData?.emailVerified ? (
-            <CreatePost />
-          ) : (
-            <button
-              type="button"
-              className="w-full bg-[var(--aj-primary)] text-[var(--aj-background)] px-6 py-3 text-xl rounded-xl"
-              onClick={(e) => sendVerificationEmail(e, Sent, setSent)}
-              disabled={Sent}
-            >
-              {Sent ? "Verification mail sent" : "Verify Email"}
-            </button>
-          )}
-        </>
+        <CreatePost onPostCreated={handlePostCreated} />
       )}
       <PostView Data={Data} />
     </>

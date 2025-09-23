@@ -7,9 +7,9 @@ export default function PostView({ Data }: { Data: PostInterface[] }) {
     <div className="flex flex-col gap-4">
       {Data &&
         Data.length > 0 &&
-        React.Children.toArray(
-          Data.map((post: PostInterface) => <Post post={post} />)
-        )}
+        Data.map((post: PostInterface) => (
+          <Post key={post.id} post={post} />
+        ))}
     </div>
   );
 }

@@ -12,6 +12,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
+    "cloudinary": "^2.7.0",
     "firebase": "^11.3.0",
     "next": "15.1.7",
     "next-theme": "^0.1.5",

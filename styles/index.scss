@@ -35,8 +35,7 @@
   }
 }
 
-// .light,
-[data-theme="light"] {
+.light {
   --aj-background: var(--aj-cream);
   --aj-background-substitute: var(--aj-parrot-secondary);
   --aj-foreground: var(--aj-dark-primary);
@@ -44,8 +43,7 @@
   --aj-primary-substitute: var(--aj-green-secondary);
 }
 
-// .dark,
-[data-theme="dark"] {
+.dark {
   --aj-background: var(--aj-dark-primary);
   --aj-background-substitute: var(--aj-dark-secondary);
   --aj-foreground: var(--aj-light);
