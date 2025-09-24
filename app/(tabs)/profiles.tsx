@@ -116,7 +116,7 @@ export default function ProfilesScreen() {
           </View>
         </View>
         <Pressable
-          onPress={signOut}
+          onPress={() => signOut()}
           style={[styles.sent_button, { backgroundColor: theme.primary }]}
         >
           <View>
