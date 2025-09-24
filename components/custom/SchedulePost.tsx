@@ -3,7 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { postInterface } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import React from "react";
+import React, { useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function SchedulePost({
@@ -13,6 +13,10 @@ export default function SchedulePost({
 }) {
   const { theme } = useThemeColor();
   const { usersDataGlobal } = useAuth();
+
+  const userProfile = useMemo(() => {
+    return usersDataGlobal?.find((el) => el.id === postData?.author_uid);
+  }, [postData?.author_uid, usersDataGlobal]);
 
   return (
     <View
@@ -26,16 +30,20 @@ export default function SchedulePost({
           <Image
             source={{
               uri:
-                usersDataGlobal?.find((el) => el.uid === postData?.author_uid)
-                  ?.photoURL ??
-                "https://images.unsplash.com/photo-1541140134513-85a161dc4a00?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                userProfile?.photoURL && !postData?.is_anonymous
+                  ? userProfile?.photoURL
+                  : require("@/assets/images/auth/male.png"),
             }}
             style={styles.avatar}
           />
-          <Text style={[styles.authorName, { color: theme.text }]}>
-            {usersDataGlobal?.find((el) => el.uid === postData?.author_uid)
-              ?.displayName || "User Name"}
-          </Text>
+          <View>
+            <Text style={[styles.authorName, { color: theme.text }]}>
+              {userProfile?.display_name ?? "Anonymous User"}
+            </Text>
+            <Text style={[styles.time, { color: theme.text }]}>
+              {postData?.post_time}
+            </Text>
+          </View>
         </View>
         <Text style={[styles.title, { color: theme.text }]}>
           {postData?.title}
@@ -49,9 +57,7 @@ export default function SchedulePost({
         <View style={styles.postImageContainer}>
           <Image
             source={{
-              uri:
-                postData?.image ??
-                "https://images.unsplash.com/photo-1541140134513-85a161dc4a00?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+              uri: postData?.image ?? "",
             }}
             style={styles.postImage}
             contentFit="cover"
@@ -102,6 +108,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
+  time: {},
   title: {
     fontSize: 18,
     fontWeight: "bold",
