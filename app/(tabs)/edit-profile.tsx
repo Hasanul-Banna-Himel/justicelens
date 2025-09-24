@@ -1,10 +1,12 @@
 import StyledDatePicker from "@/components/custom/StyledDatePicker";
+import StyledImagePicker from "@/components/custom/StyledImagePicker";
 import StyledInput from "@/components/custom/StyledInput";
 import StyledSelect from "@/components/custom/StyledSelect";
 import { useAuth } from "@/contexts/authContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import ContainerGlobalClean from "@/layout/ContainerGlobalClean";
 import { genderType } from "@/types";
+import { deleteImage } from "@/utils/cloudinary";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
@@ -30,6 +32,9 @@ export default function EditProfileScreen() {
   const [contact, setContact] = useState<string | null | undefined>(
     DBuser?.contact
   );
+  const [photoURL, setPhotoURL] = useState<string | null | undefined>(
+    DBuser?.photo_url
+  );
 
   const GENDER_OPTIONS = [
     {
@@ -42,12 +47,13 @@ export default function EditProfileScreen() {
     },
   ];
 
-  const handleUpdateProfile = () => {
+  const handleUpdateProfile = async () => {
     if (
       DBuser?.gender === Gender &&
       DBuser?.dob === DOB &&
       DBuser?.institution === Institution &&
-      DBuser?.contact === contact
+      DBuser?.contact === contact &&
+      DBuser?.photo_url === photoURL
     ) {
       Alert.alert(
         "No Changes Detected",
@@ -55,13 +61,16 @@ export default function EditProfileScreen() {
       );
       return;
     } else {
+      if (DBuser?.photo_url && DBuser.photo_url !== photoURL) {
+        await deleteImage(DBuser.photo_url);
+      }
       updateDBProfile({
         ...DBuser,
-        uid: DBuser?.uid as string,
+        id: DBuser?.id as string,
         email: DBuser?.email as string,
-        displayName: DBuser?.displayName as string,
-        photoURL: DBuser?.photoURL as string,
-        emailVerified: DBuser?.emailVerified as boolean,
+        display_name: DBuser?.display_name as string,
+        photo_url: photoURL,
+        email_verified: DBuser?.email_verified as boolean,
         dob: DOB,
         institution: Institution,
         gender: Gender as genderType,
@@ -99,6 +108,17 @@ export default function EditProfileScreen() {
           showsVerticalScrollIndicator={false}
           style={[styles.scrollViewContainer]}
         >
+          <StyledImagePicker
+            value={photoURL}
+            onChange={setPhotoURL}
+            style={{
+              borderRadius: "50%",
+              aspectRatio: 1,
+              marginHorizontal: "auto",
+              width: 120,
+            }}
+            placeholder="Select Profile Image"
+          />
           <StyledSelect
             value={Gender}
             onChange={setGender}
