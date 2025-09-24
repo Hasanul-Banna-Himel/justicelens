@@ -90,7 +90,7 @@ const StyledDateTimePicker: React.FC<StyledDateTimePickerProps> = ({
     setSelectedDay(String(date.getDate()).padStart(2, "0"));
     setSelectedMonth(months[date.getMonth()]);
     setSelectedYear(String(date.getFullYear()));
-  }, [value]);
+  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setAvailableYears(generateYears());
@@ -129,7 +129,7 @@ const StyledDateTimePicker: React.FC<StyledDateTimePickerProps> = ({
     if (newAvailableMonths.indexOf(selectedMonth) === -1) {
       setSelectedMonth(newAvailableMonths[newAvailableMonths.length - 1]);
     }
-  }, [selectedYear]);
+  }, [selectedYear]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!selectedYear || !selectedMonth) return;
@@ -168,7 +168,7 @@ const StyledDateTimePicker: React.FC<StyledDateTimePickerProps> = ({
     if (newAvailableDays.indexOf(selectedDay) === -1) {
       setSelectedDay(newAvailableDays[newAvailableDays.length - 1]);
     }
-  }, [selectedYear, selectedMonth]);
+  }, [selectedYear, selectedMonth]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onSelect = () => {
     const year = parseInt(selectedYear, 10);

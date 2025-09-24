@@ -1,26 +1,38 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { deleteImage, uploadImage } from "@/utils/cloudinary";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
-import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
 
 interface StyledImagePickerProps {
-  value: string | null;
+  value: string | null | undefined;
   onChange: (uri: string | null) => void;
   label?: string;
   placeholder?: string;
   labelBackgroundColor?: string;
+  style?: StyleProp<ViewStyle>;
 }
 
 const StyledImagePicker: React.FC<StyledImagePickerProps> = ({
   value,
   onChange,
   label,
-  placeholder = "Select an image",
+  placeholder,
   labelBackgroundColor,
+  style,
 }) => {
   const { theme } = useThemeColor();
+  const [uploading, setUploading] = useState(false);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -31,19 +43,45 @@ const StyledImagePicker: React.FC<StyledImagePickerProps> = ({
     });
 
     if (!result.canceled) {
-      onChange(result.assets[0].uri);
+      setUploading(true);
+      try {
+        const { url: cloudinaryUrl } = await uploadImage(result.assets[0].uri);
+        if (cloudinaryUrl) {
+          // If there was a previous image, delete it from Cloudinary
+          console.log(cloudinaryUrl);
+
+          if (value) {
+            await deleteImage(value);
+          }
+          onChange(cloudinaryUrl);
+        } else {
+          onChange(null);
+        }
+      } catch (error) {
+        console.error("Error uploading image to Cloudinary:", error);
+        onChange(null);
+      } finally {
+        setUploading(false);
+      }
     } else {
-      onChange(null);
+      // If user cancels image selection, and there was a previous image, keep it.
+      // If there was no previous image, set to null.
+      if (!value) {
+        onChange(null);
+      }
     }
   };
 
   return (
     <View style={[styles.container]}>
       <Pressable
-        style={[styles.pickerActivator, { borderColor: theme?.text }]}
+        style={[styles.pickerActivator, { borderColor: theme?.text }, style]}
         onPress={pickImage}
+        disabled={uploading}
       >
-        {value ? (
+        {uploading ? (
+          <ActivityIndicator size="large" color={theme.primary} />
+        ) : value ? (
           <Image
             source={{ uri: value }}
             style={styles.imagePreview}
@@ -51,13 +89,15 @@ const StyledImagePicker: React.FC<StyledImagePickerProps> = ({
           />
         ) : (
           <>
-            <Text style={{ color: theme.gray }}>{placeholder}</Text>
             <Ionicons
               name="image"
               size={24}
               color={theme.text}
               style={styles.icon}
             />
+            <Text style={{ color: theme.gray, textAlign: "center" }}>
+              {placeholder}
+            </Text>
           </>
         )}
         {label && (
@@ -95,7 +135,7 @@ const styles = StyleSheet.create({
   },
   label: {
     position: "absolute",
-    top: -10, // Adjust for better positioning
+    top: -10,
     left: 10,
     paddingHorizontal: 4,
   },
@@ -106,8 +146,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   icon: {
-    position: "absolute",
-    opacity: 0.5, // Make icon slightly transparent when image is present
+    opacity: 0.5,
   },
 });
 

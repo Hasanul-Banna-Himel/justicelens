@@ -1,21 +1,17 @@
-export interface CustomUser {
-  uid: string;
-  email: string | null;
-  displayName?: string | null;
-  photoURL?: string | null;
-  [key: string]: any;
-}
+import { User } from "@supabase/supabase-js";
+
+export type CustomUser = User;
 
 export interface DBUserInterface {
-  uid: string;
+  id: string;
   email: string | null;
-  displayName?: string | null;
-  photoURL?: string | null;
-  firstName?: string | null;
-  lastName?: string | null;
+  display_name?: string | null;
+  photo_url?: string | null;
+  first_name?: string | null;
+  last_name?: string | null;
   dob?: string | null;
   institution?: string | null;
-  emailVerified: boolean;
+  email_verified: boolean;
   gender?: genderType;
   contact?: string | null;
   [key: string]: any;
@@ -50,6 +46,9 @@ export interface postContextProps {
   getSearchFilteredPosts: (searchText: string) => postInterface[];
   AddPost: (post: postInterface) => Promise<void>;
   updatePostData: (post: postInterface) => Promise<void>;
+  fetchPosts: () => Promise<void>;
+  refreshPosts: () => Promise<void>;
+  hasMorePosts: boolean;
 }
 
 export interface globalDataContextProps {
@@ -60,7 +59,7 @@ export interface globalDataContextProps {
 export type genderType = "male" | "female";
 export type prefGenderType = "male" | "female" | "any";
 export interface postInterface {
-  pid: string;
+  id: string;
   author_uid: string;
   title: string;
   description: string;
@@ -68,9 +67,11 @@ export interface postInterface {
   district: string;
   division: string;
   thana: string;
-  crimeTime: string;
-  postedAt: string;
-  crimeType?: string;
+  crime_time: string;
+  post_time: string;
+  crime_type?: string;
+  is_anonymous: boolean;
+  video?: string | null;
 }
 
 export interface postTimesInterface {

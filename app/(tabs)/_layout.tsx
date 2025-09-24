@@ -14,7 +14,7 @@ import { Entypo, Feather, Ionicons } from "@expo/vector-icons";
 // The inner layout component that contains the tabs and notification listeners
 function InnerLayout() {
   const colorScheme = useColorScheme();
-  const { initialLoading, user, DBuser } = useAuth();
+  const { initialLoading, user } = useAuth();
   const navigationState = useRootNavigationState();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ function InnerLayout() {
     if (user === null) router.replace("/get-started-1");
   }, [initialLoading, user, navigationState?.key]);
 
-  if (DBuser && !DBuser?.emailVerified) {
+  if (user && !user?.last_sign_in_at) {
     return <VerifyEmailScreen />;
   }
 
