@@ -4,18 +4,54 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import ContainerGlobalClean from "@/layout/ContainerGlobalClean";
 import LogoHeader from "@/layout/LogoHeader";
 import { postInterface } from "@/types";
-import { useEffect, useState } from "react";
-import { Platform, ScrollView, StyleSheet, Text } from "react-native";
+import { useEffect, useState, useCallback } from "react";
+import {
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  RefreshControl,
+  ActivityIndicator,
+  View,
+} from "react-native";
 
 export default function HomeScreen() {
   const { theme } = useThemeColor();
   const [POSTS, setPOSTS] = useState<postInterface[]>([]);
 
-  const { posts: PostArray, loadingPosts } = usePostContext();
+  const {
+    posts: PostArray,
+    loadingPosts,
+    fetchPosts,
+    refreshPosts,
+    hasMorePosts,
+  } = usePostContext();
+
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     setPOSTS(PostArray);
   }, [PostArray]);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refreshPosts();
+    setRefreshing(false);
+  }, [refreshPosts]);
+
+  const handleScroll = (event: any) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const paddingToBottom = 20; // Threshold for fetching more posts
+
+    if (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom &&
+      !loadingPosts &&
+      hasMorePosts
+    ) {
+      fetchPosts();
+    }
+  };
 
   return (
     <ContainerGlobalClean>
@@ -23,19 +59,25 @@ export default function HomeScreen() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={[styles.scrollViewContainer]}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
-        {loadingPosts ? (
-          <Text style={[styles?.ln_text, { color: theme?.text }]}>
-            Loading...
-          </Text>
-        ) : POSTS.length > 0 ? (
+        {POSTS.length > 0 ? (
           POSTS.map((post, index) => (
             <SchedulePost key={index} postData={post} />
           ))
-        ) : (
+        ) : !loadingPosts ? (
           <Text style={[styles?.ln_text, { color: theme?.text }]}>
             No Data Found
           </Text>
+        ) : null}
+        {loadingPosts && hasMorePosts && (
+          <View style={{ paddingVertical: 20 }}>
+            <ActivityIndicator size="large" color={theme.primary} />
+          </View>
         )}
       </ScrollView>
     </ContainerGlobalClean>
