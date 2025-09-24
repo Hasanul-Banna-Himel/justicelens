@@ -4,34 +4,48 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import {
-  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   View,
 } from "react-native";
 
 export default function SettingsScreens() {
-  const theme = useThemeColor();
+  const { theme, themeName, toggleThemeColor } = useThemeColor();
 
   const Options: {
     sectionTitle: string;
     options: {
       title: string;
-      onPress: () => void;
+      onPress?: () => void;
       icons: {
         left: React.ComponentProps<typeof Ionicons>["name"];
-        right: React.ComponentProps<typeof Ionicons>["name"];
+        right?: React.ComponentProps<typeof Ionicons>["name"];
       };
+      toggle?: boolean;
     }[];
   }[] = [
+    {
+      sectionTitle: "Appearance",
+      options: [
+        {
+          title: "Dark Mode",
+          onPress: () => toggleThemeColor(),
+          icons: {
+            left: "moon-outline",
+          },
+          toggle: true,
+        },
+      ],
+    },
     {
       sectionTitle: "Privacy",
       options: [
         {
           title: "Delete Account",
-          onPress: () => Alert.alert("Delete Account", "Coming Soon!"),
+          onPress: () => router.push("/delete-account"),
           icons: {
             left: "trash-outline",
             right: "chevron-forward-sharp",
@@ -92,18 +106,25 @@ export default function SettingsScreens() {
                           name={option.icons.left}
                           size={24}
                           color={theme.text}
-                          style={{ marginLeft: "auto" }}
                         />
                       </View>
                       <Text style={[styles.detailsKey, { color: theme.text }]}>
                         {option.title}
                       </Text>
-                      <Ionicons
-                        name={option.icons.right}
-                        size={24}
-                        color={theme.text}
-                        style={{ marginLeft: "auto" }}
-                      />
+                      {option.toggle ? (
+                        <Switch
+                          value={themeName === "dark"}
+                          onValueChange={toggleThemeColor}
+                          style={{ marginLeft: "auto" }}
+                        />
+                      ) : (
+                        <Ionicons
+                          name={option.icons.right}
+                          size={24}
+                          color={theme.text}
+                          style={{ marginLeft: "auto" }}
+                        />
+                      )}
                     </Pressable>
                   ))
                 )}

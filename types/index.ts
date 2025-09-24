@@ -13,19 +13,18 @@ export interface DBUserInterface {
   photoURL?: string | null;
   firstName?: string | null;
   lastName?: string | null;
+  dob?: string | null;
+  institution?: string | null;
   emailVerified: boolean;
   gender?: genderType;
-  division?: string;
-  district?: string;
-  thana?: string;
-  preferredPartnerGender?: prefGenderType;
-  contact?: string;
+  contact?: string | null;
   [key: string]: any;
 }
 
 export interface AuthContextProps {
   user: CustomUser | null;
   DBuser: DBUserInterface | null;
+  usersDataGlobal: DBUserInterface[];
   loading: boolean;
   initialLoading: boolean;
   error: Error | undefined;
@@ -46,10 +45,10 @@ export interface AuthContextProps {
 export interface postContextProps {
   posts: postInterface[];
   loadingPosts: boolean;
-  userSchedule: postInterface | undefined;
+  userPosts: postInterface[];
   postError: Error | undefined;
   getSearchFilteredPosts: (searchText: string) => postInterface[];
-  setMySchedule: (post: postInterface) => Promise<void>;
+  AddPost: (post: postInterface) => Promise<void>;
   updatePostData: (post: postInterface) => Promise<void>;
 }
 
@@ -63,14 +62,15 @@ export type prefGenderType = "male" | "female" | "any";
 export interface postInterface {
   pid: string;
   author_uid: string;
+  title: string;
+  description: string;
+  image: string;
   district: string;
   division: string;
-  gender: genderType;
-  preferredPartnerGender: prefGenderType;
   thana: string;
-  transportation: string;
-  times: postTimesInterface;
-  semester: string;
+  crimeTime: string;
+  postedAt: string;
+  crimeType?: string;
 }
 
 export interface postTimesInterface {

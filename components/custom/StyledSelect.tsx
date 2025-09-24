@@ -28,7 +28,7 @@ const StyledSelect: React.FC<StyledSelectProps> = ({
   labelBackgroundColor,
   options,
 }) => {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const [showPicker, setShowPicker] = useState(false);
 
   const renderPickerColumn = (
@@ -39,7 +39,18 @@ const StyledSelect: React.FC<StyledSelectProps> = ({
     <FlatList
       data={data}
       renderItem={({ item }) => (
-        <Pressable onPress={() => onValueChange(item.value)}>
+        <Pressable
+          style={[
+            styles?.pickerItemsContainer,
+            {
+              backgroundColor:
+                selectedValue === item?.value
+                  ? theme?.background
+                  : "transparent",
+            },
+          ]}
+          onPress={() => onValueChange(item.value)}
+        >
           <Text
             style={[
               styles.pickerItem,
@@ -177,6 +188,10 @@ const styles = StyleSheet.create({
   },
   pickerColumn: {
     flex: 1,
+  },
+  pickerItemsContainer: {
+    paddingVertical: 4,
+    paddingHorizontal: 8,
   },
   pickerItem: {
     fontSize: 20,

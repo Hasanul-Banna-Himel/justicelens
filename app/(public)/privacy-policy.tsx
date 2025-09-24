@@ -6,7 +6,7 @@ import React from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function PrivacyPolicyScreens() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   return (
     <ContainerGlobalClean>
       <View style={styles.headerContainer}>

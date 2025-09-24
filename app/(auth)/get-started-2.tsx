@@ -11,7 +11,7 @@ import {
 } from "react-native";
 
 export default function GetStarted2() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   return (
     <SafeAreaView
       style={{ flex: 1, marginTop: 36, backgroundColor: theme.background }}

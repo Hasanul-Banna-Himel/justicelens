@@ -1,20 +1,13 @@
+import StyledDatePicker from "@/components/custom/StyledDatePicker";
 import StyledInput from "@/components/custom/StyledInput";
 import StyledSelect from "@/components/custom/StyledSelect";
 import { useAuth } from "@/contexts/authContext";
-import { usePostContext } from "@/contexts/postContext";
-import dist from "@/data/districts.json";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import ContainerGlobalClean from "@/layout/ContainerGlobalClean";
-import {
-  District,
-  DistrictData,
-  genderType,
-  postTimesInterface,
-  prefGenderType,
-} from "@/types";
+import { genderType } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Alert,
   Platform,
@@ -26,26 +19,17 @@ import {
 } from "react-native";
 
 export default function EditProfileScreen() {
-  const DIVISIONData: DistrictData = dist;
+  const { theme } = useThemeColor();
+  const { loading, DBuser, updateDBProfile, error } = useAuth();
 
-  const theme = useThemeColor();
-  const { loading, DBuser, updateDBProfile } = useAuth();
-  const { userSchedule, loadingPosts, postError, updatePostData } =
-    usePostContext();
-
-  const [Gender, setGender] = useState(userSchedule?.gender ?? "");
-  const [ComfortableGender, setComfortableGender] = useState(
-    userSchedule?.preferredPartnerGender ?? ""
+  const [Gender, setGender] = useState(DBuser?.gender ?? "");
+  const [DOB, setDOB] = useState(DBuser?.dob);
+  const [Institution, setInstitution] = useState<string | undefined | null>(
+    DBuser?.institution
   );
-  const [division] = useState(userSchedule?.division ?? "DHAKA");
-  const [district, setDistrict] = useState<string>(
-    userSchedule?.district ?? ""
+  const [contact, setContact] = useState<string | null | undefined>(
+    DBuser?.contact
   );
-  const [thana, setThana] = useState<string>(userSchedule?.thana ?? "");
-  const [transportation, setTransportation] = useState<string>(
-    userSchedule?.transportation ?? ""
-  );
-  const [contact, setContact] = useState<string>(DBuser?.contact ?? "");
 
   const GENDER_OPTIONS = [
     {
@@ -56,31 +40,13 @@ export default function EditProfileScreen() {
       text: "Female",
       value: "female",
     },
-    {
-      text: "Everyone",
-      value: "any",
-    },
   ];
-
-  useEffect(() => {
-    if (division === userSchedule?.division) return;
-    setDistrict("");
-    setThana("");
-  }, [division, userSchedule?.division]);
-
-  useEffect(() => {
-    if (district === userSchedule?.district) return;
-    setThana("");
-  }, [district, userSchedule?.district]);
 
   const handleUpdateProfile = () => {
     if (
-      userSchedule?.thana === thana &&
-      userSchedule?.district === district &&
-      userSchedule?.division === division &&
-      userSchedule?.gender === Gender &&
-      userSchedule?.preferredPartnerGender === ComfortableGender &&
-      userSchedule?.transportation === transportation &&
+      DBuser?.gender === Gender &&
+      DBuser?.dob === DOB &&
+      DBuser?.institution === Institution &&
       DBuser?.contact === contact
     ) {
       Alert.alert(
@@ -89,19 +55,6 @@ export default function EditProfileScreen() {
       );
       return;
     } else {
-      updatePostData({
-        ...userSchedule,
-        pid: userSchedule?.pid as string,
-        author_uid: userSchedule?.author_uid as string,
-        times: userSchedule?.times as postTimesInterface,
-        semester: userSchedule?.semester as string,
-        division,
-        district,
-        thana,
-        transportation,
-        gender: Gender as genderType,
-        preferredPartnerGender: ComfortableGender as prefGenderType,
-      });
       updateDBProfile({
         ...DBuser,
         uid: DBuser?.uid as string,
@@ -109,15 +62,13 @@ export default function EditProfileScreen() {
         displayName: DBuser?.displayName as string,
         photoURL: DBuser?.photoURL as string,
         emailVerified: DBuser?.emailVerified as boolean,
-        division,
-        district,
-        thana,
+        dob: DOB,
+        institution: Institution,
         gender: Gender as genderType,
-        preferredPartnerGender: ComfortableGender as prefGenderType,
-        contact,
+        contact: contact,
       });
 
-      if (postError) Alert.alert(postError?.name, postError?.message);
+      if (error) Alert.alert(error?.name, error?.message);
       else
         Alert.alert(
           "Profile Updated",
@@ -151,89 +102,39 @@ export default function EditProfileScreen() {
           <StyledSelect
             value={Gender}
             onChange={setGender}
-            options={GENDER_OPTIONS.slice(0, 2)}
+            options={GENDER_OPTIONS}
             label="Select Gender"
             labelBackgroundColor={theme.background}
             dropdownIconColor={theme.text}
           />
-          <StyledSelect
-            value={ComfortableGender}
-            onChange={setComfortableGender}
-            options={GENDER_OPTIONS}
-            label="Comfortable traveling with"
-            labelBackgroundColor={theme.background}
-            dropdownIconColor={theme.text}
-          />
-          {/* <StyledSelect
-          value={division}
-          onChange={setDivision}
-          options={
-            DIVISIONData.Divisions?.map((d: Division) => ({
-              text: d.name,
-              value: d.name,
-            })) ?? []
-          }
-          label="Division"
-          labelBackgroundColor={theme.background}
-          dropdownIconColor={theme.text}
-        /> */}
-          {division !== "" && (
-            <StyledSelect
-              value={district}
-              onChange={setDistrict}
-              options={
-                DIVISIONData.Divisions.find(
-                  (el) => el.name === division
-                )?.districts?.map((d: District) => ({
-                  text: d.name,
-                  value: d.name,
-                })) ?? []
-              }
-              label="Districts"
-              labelBackgroundColor={theme.background}
-              dropdownIconColor={theme.text}
-            />
-          )}
-          {district !== "" && (
-            <StyledSelect
-              value={thana}
-              onChange={setThana}
-              options={
-                DIVISIONData.Divisions.find((el) => el.name === division)
-                  ?.districts?.find((el: District) => el.name === district)
-                  ?.thana?.map((d: string) => ({
-                    text: d,
-                    value: d,
-                  })) ?? []
-              }
-              label="Thana"
-              labelBackgroundColor={theme.background}
-              dropdownIconColor={theme.text}
-            />
-          )}
-          <StyledInput
-            value={transportation}
-            onChange={setTransportation}
-            label="Preferred Transportation"
-            labelBackgroundColor={theme.background}
-            placeholder="e.g., Car, Bike, Bus, etc."
+          <StyledDatePicker
+            value={DOB}
+            onChange={setDOB}
+            label="Date Of Birth"
           />
           <StyledInput
-            value={contact}
+            value={Institution as string}
+            onChange={setInstitution}
+            label="Institution (optional)"
+            labelBackgroundColor={theme.background}
+            placeholder="e.g., Office, University, College, School, etc."
+          />
+          <StyledInput
+            value={contact as string}
             onChange={setContact}
-            label="Preferred Contact Information"
+            label="Contact Information (optional)"
             labelBackgroundColor={theme.background}
-            placeholder="e.g., Phone number, Email, messenger, telegram, etc."
+            placeholder="e.g., Phone number, messenger, telegram, etc."
           />
         </ScrollView>
         <Pressable
           onPress={() => handleUpdateProfile()}
-          disabled={loadingPosts || loading}
+          disabled={loading}
           style={[styles.sent_button, { backgroundColor: theme.primary }]}
         >
           <View>
             <Text style={[styles?.button_text, { color: theme.background }]}>
-              {loadingPosts || loading ? "Loading..." : "Update Profile"}
+              {loading ? "Loading..." : "Update Profile"}
             </Text>
           </View>
         </Pressable>

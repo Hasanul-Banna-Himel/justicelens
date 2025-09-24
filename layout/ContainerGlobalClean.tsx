@@ -7,7 +7,7 @@ export default function ContainerGlobalClean({
 }: {
   children: React.ReactNode;
 }) {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   return (
     <SafeAreaView
       style={{

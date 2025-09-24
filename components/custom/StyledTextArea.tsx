@@ -1,22 +1,23 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
-
 import React from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
-interface StyledInputProps {
+interface StyledTextAreaProps {
   value: string;
   onChange: (value: string) => void;
   label?: string;
   placeholder?: string;
   labelBackgroundColor?: string;
+  numberOfLines?: number;
 }
 
-const StyledInput: React.FC<StyledInputProps> = ({
+const StyledTextArea: React.FC<StyledTextAreaProps> = ({
   value,
   onChange,
   label,
   placeholder,
   labelBackgroundColor,
+  numberOfLines = 4,
 }) => {
   const { theme } = useThemeColor();
 
@@ -32,18 +33,23 @@ const StyledInput: React.FC<StyledInputProps> = ({
             { color: theme?.primary, borderColor: theme.text },
           ]}
           onChangeText={(text: string) => onChange(text)}
+          multiline
+          numberOfLines={numberOfLines}
+          textAlignVertical="top"
         />
-        <Text
-          style={[
-            styles.label,
-            {
-              color: theme?.text,
-              backgroundColor: labelBackgroundColor ?? theme.background,
-            },
-          ]}
-        >
-          {label}
-        </Text>
+        {label && (
+          <Text
+            style={[
+              styles.label,
+              {
+                color: theme?.text,
+                backgroundColor: labelBackgroundColor ?? theme.background,
+              },
+            ]}
+          >
+            {label}
+          </Text>
+        )}
       </View>
     </View>
   );
@@ -60,6 +66,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     position: "relative",
+    minHeight: 100, // Adjust as needed for a text area
   },
   input: {
     flex: 1,
@@ -69,10 +76,10 @@ const styles = StyleSheet.create({
   },
   label: {
     position: "absolute",
-    top: "-50%",
+    top: -10, // Adjust for better positioning
     left: 10,
     paddingHorizontal: 4,
   },
 });
 
-export default StyledInput;
+export default StyledTextArea;

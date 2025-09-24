@@ -1,12 +1,16 @@
-import TimePicker from "@/components/custom/StyledTimePicker";
+import StyledDateTimePicker from "@/components/custom/StyledDateTimePicker";
+import StyledImagePicker from "@/components/custom/StyledImagePicker";
+import StyledInput from "@/components/custom/StyledInput";
+import StyledSelect from "@/components/custom/StyledSelect";
+import StyledTextArea from "@/components/custom/StyledTextArea";
 import { useAuth } from "@/contexts/authContext";
-import { useGlobalDataContext } from "@/contexts/globalDataContext";
 import { usePostContext } from "@/contexts/postContext";
+import dist from "@/data/districts.json";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import ContainerGlobalClean from "@/layout/ContainerGlobalClean";
-import { dayType, genderType, postInterface, prefGenderType } from "@/types";
-import { deepEqual } from "@/utils/functions/deepEqual";
-import { useState } from "react";
+import { District, DistrictData, Division, postInterface } from "@/types";
+import { PostID } from "@/utils/functions/generation";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Platform,
@@ -18,82 +22,55 @@ import {
 } from "react-native";
 
 export default function ScheduleScreen() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
+  const DIVISIONData: DistrictData = dist;
   const { user } = useAuth();
-  const { semester } = useGlobalDataContext();
-  const {
-    setMySchedule: updateSchedule,
-    loadingPosts,
-    postError,
-    userSchedule,
-  } = usePostContext();
+  const { AddPost, loadingPosts, postError } = usePostContext();
 
-  const scheduleBoilerplate: postInterface = {
-    pid: user?.uid as string,
-    author_uid: user?.uid as string,
-    district: "DHAKA",
-    division: "DHAKA",
-    gender: "male" as genderType,
-    preferredPartnerGender: "male" as prefGenderType,
-    thana: "RAMPURA",
-    transportation: "",
-    times: {
-      friday: {
-        starts: "",
-        ends: "",
-      },
-      saturday: {
-        starts: "",
-        ends: "",
-      },
-      sunday: {
-        starts: "",
-        ends: "",
-      },
-      monday: {
-        starts: "",
-        ends: "",
-      },
-      tuesday: {
-        starts: "",
-        ends: "",
-      },
-      wednesday: {
-        starts: "",
-        ends: "",
-      },
-      thursday: {
-        starts: "",
-        ends: "",
-      },
-    },
-    semester: semester,
-  };
+  const pid = PostID();
 
-  const [MySchedule, setMySchedule] = useState<postInterface>(
-    userSchedule
-      ? JSON.parse(JSON.stringify(userSchedule))
-      : scheduleBoilerplate
-  );
-
-  const DAYS: dayType[] = [
-    "sunday",
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-  ];
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [image, setImage] = useState<string | null>(null);
+  const [division, setDivision] = useState<string>("");
+  const [district, setDistrict] = useState<string>("");
+  const [thana, setThana] = useState<string>("");
+  const [crimeTime, setCrimeTime] = useState<Date>(new Date());
+  const [crimeType, setCrimeType] = useState<string>("");
 
   const setSchedule = () => {
-    if (deepEqual(MySchedule?.times, userSchedule?.times)) {
+    if (!user?.uid)
+      Alert.alert("User not found", "Please signin again and try.");
+    if (!pid) Alert.alert("Something went wrong.", "Please try again.");
+
+    if (
+      !thana ||
+      !district ||
+      !division ||
+      !crimeTime ||
+      !title ||
+      !description ||
+      !image
+    ) {
       Alert.alert(
-        "Skipping Update Action",
-        "You have not updated anything hence nothing to update"
+        "Required fields missing",
+        "Please fill all the required fields."
       );
     } else {
-      updateSchedule({ ...MySchedule, semester });
+      const postObject: postInterface = {
+        pid,
+        author_uid: user?.uid as string,
+        title,
+        description,
+        image,
+        district,
+        division,
+        thana,
+        crimeTime: crimeTime?.toISOString(),
+        postedAt: new Date().toISOString(),
+        crimeType,
+      };
+      AddPost(postObject);
       if (postError) Alert.alert(postError?.name, postError?.message);
       else
         Alert.alert(
@@ -103,45 +80,114 @@ export default function ScheduleScreen() {
     }
   };
 
-  const handleChange = (day: dayType, type: "start" | "end", value: string) => {
-    const newSchedule = JSON.parse(JSON.stringify(MySchedule));
-    if (type === "start") {
-      newSchedule.times[day].starts = value;
-    } else {
-      newSchedule.times[day].ends = value;
-    }
-    setMySchedule(newSchedule);
-  };
+  useEffect(() => {
+    setDistrict("");
+    setThana("");
+  }, [division]);
+
+  useEffect(() => {
+    setThana("");
+  }, [district]);
 
   return (
     <ContainerGlobalClean>
       <View style={styles.headerContainer}>
-        <Text style={[styles?.pageTitle, { color: theme.primary }]}>
-          Edit Schedule
-        </Text>
+        <View style={styles.headerCenterContainer}>
+          <Text style={[styles?.pageTitle, { color: theme.primary }]}>
+            Report a Crime
+          </Text>
+          <Text style={[styles?.pageSubtitle, { color: theme.text }]}>
+            Please put the information as accurate as possible.
+          </Text>
+        </View>
       </View>
       <View style={[styles?.container]}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={[styles.scrollViewContainer]}
         >
-          {DAYS.map((day, index) => (
-            <View style={[styles.dayContainer]} key={index}>
-              <Text style={[styles?.days, { color: theme?.text }]}>{day}</Text>
-              <View>
-                <TimePicker
-                  value={MySchedule?.times?.[day]?.starts}
-                  onChange={(val) => handleChange(day, "start", val)}
-                  label="Arrival"
-                />
-                <TimePicker
-                  value={MySchedule?.times?.[day]?.ends}
-                  onChange={(val) => handleChange(day, "end", val)}
-                  label="Departure"
-                />
-              </View>
-            </View>
-          ))}
+          <StyledInput
+            value={title}
+            onChange={setTitle}
+            label="Title"
+            labelBackgroundColor={theme.background}
+            placeholder="Crime alert in XYZ area"
+          />
+          <StyledTextArea
+            value={description}
+            onChange={setDescription}
+            label="Description"
+            labelBackgroundColor={theme.background}
+            placeholder="Describe the incident"
+            numberOfLines={4}
+          />
+          <StyledSelect
+            value={division}
+            onChange={setDivision}
+            options={
+              DIVISIONData.Divisions?.map((d: Division) => ({
+                text: d.name,
+                value: d.name,
+              })) ?? []
+            }
+            label="Division"
+            labelBackgroundColor={theme.background}
+            dropdownIconColor={theme.text}
+          />
+          {division !== "" && (
+            <StyledSelect
+              value={district}
+              onChange={setDistrict}
+              options={
+                DIVISIONData.Divisions.find(
+                  (el) => el.name === division
+                )?.districts?.map((d: District) => ({
+                  text: d.name,
+                  value: d.name,
+                })) ?? []
+              }
+              label="Districts"
+              labelBackgroundColor={theme.background}
+              dropdownIconColor={theme.text}
+            />
+          )}
+          {district !== "" && (
+            <StyledSelect
+              value={thana}
+              onChange={setThana}
+              options={
+                DIVISIONData.Divisions.find((el) => el.name === division)
+                  ?.districts?.find((el: District) => el.name === district)
+                  ?.thana?.map((d: string) => ({
+                    text: d,
+                    value: d,
+                  })) ?? []
+              }
+              label="Thana"
+              labelBackgroundColor={theme.background}
+              dropdownIconColor={theme.text}
+            />
+          )}
+          <StyledImagePicker
+            value={image}
+            onChange={setImage}
+            label="Photo Proof"
+            labelBackgroundColor={theme.background}
+            placeholder="Select a file"
+          />
+          <StyledDateTimePicker
+            value={crimeTime}
+            onChange={setCrimeTime}
+            label="Approximate Time"
+            labelBackgroundColor={theme.background}
+          />
+          <StyledInput
+            value={crimeType}
+            onChange={setCrimeType}
+            label="Crime Type (Optional)"
+            labelBackgroundColor={theme.background}
+            placeholder="e.g., robbery, assault"
+          />
         </ScrollView>
         <Pressable
           onPress={() => setSchedule()}
@@ -150,7 +196,7 @@ export default function ScheduleScreen() {
         >
           <View>
             <Text style={[styles?.button_text, { color: theme.background }]}>
-              {loadingPosts ? "Loading..." : "Update Schedule"}
+              {loadingPosts ? "Loading..." : "Post Now"}
             </Text>
           </View>
         </Pressable>
@@ -166,9 +212,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
+  headerCenterContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 0,
+  },
   pageTitle: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+  pageSubtitle: {
+    fontSize: 14,
+    fontWeight: "400",
   },
   container: {
     flex: 1,
@@ -178,6 +234,12 @@ const styles = StyleSheet.create({
   scrollViewContainer: {
     flex: 1,
     paddingBottom: 0,
+  },
+  twoColumnContainer: {
+    width: "100%",
+    flexDirection: "row",
+    gap: 8,
+    position: "relative",
   },
   dayContainer: {
     marginVertical: 8,

@@ -1,30 +1,37 @@
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { StyleSheet, Text, View } from "react-native";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { Image } from "expo-image";
+import { StyleSheet, View } from "react-native";
 
 export default function LogoHeader() {
-  const theme = useThemeColor();
+  const colorScheme = useColorScheme();
 
   return (
     <View style={[styles?.container]}>
-      <Text style={[styles?.logo, { color: theme?.primary }]}>JUSTICELENS</Text>
+      <Image
+        source={
+          colorScheme === "dark"
+            ? require("@/assets/images/brand/logo_light.svg")
+            : require("@/assets/images/brand/logo.svg")
+        }
+        style={styles.logo}
+        contentFit="cover"
+      />
     </View>
   );
 }
 
-const global_height = 16;
+const global_height = 24;
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
-  },
-  bar: {
-    height: global_height + 4,
-    width: 2,
+    paddingVertical: 4,
   },
   logo: {
-    fontSize: 20,
-    fontWeight: "bold",
+    height: global_height,
+    resizeMode: "cover",
+    aspectRatio: 492 / 164,
   },
 });

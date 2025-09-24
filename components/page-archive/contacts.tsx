@@ -1,32 +1,28 @@
 import { useAuth } from "@/contexts/authContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import ContainerGlobalClean from "@/layout/ContainerGlobalClean";
-import { db, functions } from "@/utils/firebase";
-import { dayType } from "@/types";
+import { db } from "@/utils/firebase";
 import { Image } from "expo-image";
 import {
   collection,
-  query,
-  where,
-  onSnapshot,
   DocumentData,
   getDocs,
+  onSnapshot,
+  query,
+  where,
 } from "firebase/firestore";
-import { httpsCallable } from "firebase/functions";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Platform,
-  Pressable,
   StyleSheet,
   Text,
   View,
-  ActivityIndicator,
-  Alert,
 } from "react-native";
 
 export default function ContactsScreen() {
-  const theme = useThemeColor();
+  const { theme } = useThemeColor();
   const { user, DBuser } = useAuth(); // Get DBuser to access schedule
   const [users, setUsers] = useState<DocumentData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -65,42 +61,6 @@ export default function ContactsScreen() {
     return () => unsubscribe();
   }, [user?.uid]);
 
-  const onNudge = (author_uid: string) => {
-    // Get current day to find today's schedule
-    const days: dayType[] = [
-      "sunday",
-      "monday",
-      "tuesday",
-      "wednesday",
-      "thursday",
-      "friday",
-      "saturday",
-    ];
-    const today: dayType = days[new Date().getDay()];
-    const todaysSchedule = DBuser?.times?.[today];
-
-    if (!todaysSchedule || !todaysSchedule.starts) {
-      Alert.alert(
-        "No Schedule",
-        "You can't send a nudge because you don't have a schedule set for today."
-      );
-      return;
-    }
-
-    const sendNudgeNotification = httpsCallable(
-      functions,
-      "sendNudgeNotification"
-    );
-
-    sendNudgeNotification({ author_uid, schedule: todaysSchedule })
-      .then(() => {
-        Alert.alert("Success", "Nudge sent successfully!");
-      })
-      .catch((error) => {
-        Alert.alert("Error", `Failed to send nudge: ${error.message}`);
-      });
-  };
-
   const renderItem = ({ item }: { item: DocumentData }) => (
     <View style={[styles.contactContainer]}>
       <Image
@@ -120,14 +80,6 @@ export default function ContactsScreen() {
           {item.email}
         </Text>
       </View>
-      <Pressable
-        style={([styles.post_button, { backgroundColor: theme.gray_light }])}
-        onPress={() => onNudge(item.uid)}
-      >
-        <Text style={[styles.post_button_text, { color: theme?.secondary }]}>
-          Nudge
-        </Text>
-      </Pressable>
     </View>
   );
 

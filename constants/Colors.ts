@@ -14,6 +14,8 @@ const colors = {
 
   aj_gray: "#9b9b9bff",
   aj_gray_light: "#e2e2e2ff",
+
+  aj_red: "#f94848ff",
 };
 
 export const Colors = {
@@ -29,6 +31,7 @@ export const Colors = {
     secondary: colors.aj_dark_secondary,
     gray: colors.aj_gray,
     gray_light: colors.aj_gray_light,
+    red: colors?.aj_red,
   },
   dark: {
     text: colors.aj_light,
@@ -42,5 +45,6 @@ export const Colors = {
     secondary: colors.aj_green_secondary,
     gray: colors.aj_gray_light,
     gray_light: colors.aj_gray,
+    red: colors?.aj_red,
   },
 };

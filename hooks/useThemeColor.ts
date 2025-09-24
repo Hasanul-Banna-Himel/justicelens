@@ -5,9 +5,13 @@
 
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { Appearance } from "react-native";
 
 export function useThemeColor() {
   const theme = useColorScheme() ?? "light";
 
-  return Colors[theme];
+  const toggleThemeColor = () =>
+    Appearance.setColorScheme(theme === "dark" ? "light" : "dark");
+
+  return { theme: Colors[theme], toggleThemeColor, themeName: theme };
 }

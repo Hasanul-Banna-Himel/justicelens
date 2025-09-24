@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts/authContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import ContainerGlobalClean from "@/layout/ContainerGlobalClean";
 import { AntDesign } from "@expo/vector-icons";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   Platform,
@@ -13,11 +13,10 @@ import {
   View,
 } from "react-native";
 
-export default function SigninPage() {
+export default function DeleteAccount() {
   const { theme } = useThemeColor();
-  const { loading, error, signIn } = useAuth();
+  const { loading, error } = useAuth();
 
-  const [Email, setEmail] = useState<string>("");
   const [Password, setPassword] = useState<string>("");
 
   return (
@@ -28,27 +27,20 @@ export default function SigninPage() {
             <AntDesign name="left" size={24} color={theme.primary} />
           </Pressable>
           <Text style={[styles.nav_text, { color: theme.primary }]}>
-            Signin
+            Delete Account
           </Text>
           <View style={styles.nav_empty}></View>
         </View>
         <View style={[styles.form_container]}>
-          <View style={[styles.input_container]}>
-            <Text style={[styles.input_label, { color: theme?.text }]}>
-              Email:
-            </Text>
-            <TextInput
-              placeholder="Enter your email"
-              placeholderTextColor={theme.gray}
-              style={[
-                styles.input_box,
-                { color: theme?.primary, borderColor: theme.text },
-              ]}
-              onChangeText={(text) => setEmail(text)}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-          </View>
+          <Text style={[{ fontSize: 24, fontWeight: 600, color: theme?.red }]}>
+            Permanently Delete Account
+          </Text>
+          <Text
+            style={[{ fontSize: 14, color: theme?.red, textAlign: "center" }]}
+          >
+            This action is irreversible. All your data will be lost and cannot
+            be recovered. Please proceed with caution.
+          </Text>
           <View style={[styles.input_container]}>
             <Text style={[styles.input_label, { color: theme?.text }]}>
               Password:
@@ -71,28 +63,17 @@ export default function SigninPage() {
           )}
 
           <Pressable
-            onPress={() => signIn(Email, Password)}
+            // onPress={() => signIn(Email, Password)}
             disabled={loading}
             style={[styles.submit_button, { backgroundColor: theme.primary }]}
           >
             <View>
               <Text style={[{ color: theme.background }]}>
-                {loading ? "Loading..." : "Signin"}
+                {loading ? "Loading..." : "Confirm Deletion"}
               </Text>
             </View>
           </Pressable>
         </View>
-
-        <Link
-          href={"/signup"}
-          asChild
-          style={[styles.change_to_button, { color: theme.primary }]}
-        >
-          <Text>
-            Don&apos;t Have An Account?{" "}
-            <Text style={[{ textDecorationLine: "underline" }]}>Signup</Text>
-          </Text>
-        </Link>
       </View>
     </ContainerGlobalClean>
   );
@@ -126,10 +107,12 @@ const styles = StyleSheet.create({
   },
   form_container: {
     alignItems: "center",
+    justifyContent: "center",
     gap: 16,
     paddingHorizontal: 24,
     paddingVertical: 24,
     width: "100%",
+    flex: 1,
   },
   input_container: {
     gap: 8,
