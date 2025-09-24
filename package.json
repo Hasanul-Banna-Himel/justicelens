@@ -8,8 +8,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint",
-    "eas-build-pre-install": "./pre-install.sh"
+    "lint": "expo lint"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
