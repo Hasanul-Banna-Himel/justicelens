@@ -23,7 +23,9 @@ export default function ProfilesScreen() {
           <View style={[styles.imageContainer]}>
             <Image
               source={
-                DBuser?.gender === "male"
+                DBuser?.photo_url
+                  ? DBuser?.photo_url
+                  : DBuser?.gender === "male"
                   ? require("@/assets/images/auth/male.png")
                   : require("@/assets/images/auth/female.png")
               }
@@ -33,7 +35,7 @@ export default function ProfilesScreen() {
           </View>
           <View style={[styles.basicsCon]}>
             <Text style={[styles.name, { color: theme.primary }]}>
-              {DBuser?.displayName}
+              {`${DBuser?.first_name} ${DBuser?.last_name}`}
             </Text>
             <Text style={[styles.email, { color: theme.secondary }]}>
               {DBuser?.email}
