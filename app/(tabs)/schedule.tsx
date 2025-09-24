@@ -10,6 +10,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import ContainerGlobalClean from "@/layout/ContainerGlobalClean";
 import { District, DistrictData, Division, postInterface } from "@/types";
 import { PostID } from "@/utils/functions/generation";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -17,6 +18,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   View,
 } from "react-native";
@@ -32,14 +34,29 @@ export default function ScheduleScreen() {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [image, setImage] = useState<string | null>(null);
+  const [video, setVideo] = useState<string | null>(null);
   const [division, setDivision] = useState<string>("");
   const [district, setDistrict] = useState<string>("");
   const [thana, setThana] = useState<string>("");
   const [crimeTime, setCrimeTime] = useState<Date>(new Date());
   const [crimeType, setCrimeType] = useState<string>("");
+  const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
+
+  const resetFields = () => {
+    setTitle("");
+    setDescription("");
+    setImage(null);
+    setVideo(null);
+    setDivision("");
+    setDistrict("");
+    setThana("");
+    setCrimeTime(new Date());
+    setCrimeType("");
+    setIsAnonymous(false);
+  };
 
   const setSchedule = () => {
-    if (!user?.uid)
+    if (!user?.id)
       Alert.alert("User not found", "Please signin again and try.");
     if (!pid) Alert.alert("Something went wrong.", "Please try again.");
 
@@ -58,25 +75,30 @@ export default function ScheduleScreen() {
       );
     } else {
       const postObject: postInterface = {
-        pid,
-        author_uid: user?.uid as string,
+        id: pid,
+        author_uid: user?.id as string,
         title,
         description,
         image,
         district,
         division,
         thana,
-        crimeTime: crimeTime?.toISOString(),
-        postedAt: new Date().toISOString(),
-        crimeType,
+        crime_time: crimeTime?.toISOString(),
+        post_time: new Date().toISOString(),
+        crime_type: crimeType,
+        is_anonymous: isAnonymous,
+        video,
       };
       AddPost(postObject);
       if (postError) Alert.alert(postError?.name, postError?.message);
-      else
+      else {
         Alert.alert(
-          "Schedule Updated",
-          "Your Schedule is successfully updated."
+          "Reported Successfully",
+          "You have successfully reported " + title + "crime."
         );
+        resetFields();
+        router.push("/");
+      }
     }
   };
 
@@ -188,18 +210,35 @@ export default function ScheduleScreen() {
             labelBackgroundColor={theme.background}
             placeholder="e.g., robbery, assault"
           />
-        </ScrollView>
-        <Pressable
-          onPress={() => setSchedule()}
-          disabled={loadingPosts}
-          style={[styles.sent_button, { backgroundColor: theme.primary }]}
-        >
-          <View>
-            <Text style={[styles?.button_text, { color: theme.background }]}>
-              {loadingPosts ? "Loading..." : "Post Now"}
-            </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginVertical: 10,
+            }}
+          >
+            <Text style={{ color: theme.text }}>Post Anonymously</Text>
+            <Switch
+              trackColor={{ false: "#767577", true: theme.primary }}
+              thumbColor={isAnonymous ? theme.background : "#f4f3f4"}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={setIsAnonymous}
+              value={isAnonymous}
+            />
           </View>
-        </Pressable>
+          <Pressable
+            onPress={() => setSchedule()}
+            disabled={loadingPosts}
+            style={[styles.sent_button, { backgroundColor: theme.primary }]}
+          >
+            <View>
+              <Text style={[styles?.button_text, { color: theme.background }]}>
+                {loadingPosts ? "Loading..." : "Post Now"}
+              </Text>
+            </View>
+          </Pressable>
+        </ScrollView>
       </View>
     </ContainerGlobalClean>
   );
