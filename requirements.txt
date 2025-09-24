@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+python-multipart
+azure-ai-vision
+python-dotenv
+gunicorn
