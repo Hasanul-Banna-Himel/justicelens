@@ -48,7 +48,6 @@ const StyledImagePicker: React.FC<StyledImagePickerProps> = ({
         const { url: cloudinaryUrl } = await uploadImage(result.assets[0].uri);
         if (cloudinaryUrl) {
           // If there was a previous image, delete it from Cloudinary
-          console.log(cloudinaryUrl);
 
           if (value) {
             await deleteImage(value);
