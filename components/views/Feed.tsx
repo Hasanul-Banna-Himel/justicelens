@@ -43,6 +43,16 @@ export default function Feed() {
     fetchPosts();
   };
 
+  const handlePostDeleted = () => {
+    // Refresh posts after deleting one
+    fetchPosts();
+  };
+
+  const handlePostEdited = () => {
+    // Refresh posts after editing one
+    fetchPosts();
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -64,7 +74,11 @@ export default function Feed() {
       {loggedInStatus && (
         <CreatePost onPostCreated={handlePostCreated} />
       )}
-      <PostView Data={Data} />
+      <PostView 
+        Data={Data} 
+        onPostDeleted={handlePostDeleted}
+        onPostEdited={handlePostEdited}
+      />
     </>
   );
 }

@@ -1,12 +1,20 @@
 import { PostInterface, UserData } from "@/interfaces";
-import { supabase } from "@/utils/supabase";
+import { supabase, deletePost } from "@/utils/supabase";
 import React, { useEffect, useState } from "react";
 import { BiSolidDownvote, BiSolidUpvote } from "react-icons/bi";
-import { FaComment } from "react-icons/fa";
+import { FaComment, FaTrash } from "react-icons/fa";
+import { useApp } from "@/store";
 
-export default function Post({ post }: { post: PostInterface }) {
+export default function Post({ post, onPostDeleted}: { 
+  post: PostInterface; 
+  onPostDeleted?: () => void;
+  
+}) {
+  const { profileData } = useApp();
   const [UserData, setUserData] = useState<UserData>({} as UserData);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  const [isDeleting, setIsDeleting] = useState(false);
+  
   
 
   useEffect(() => {
@@ -51,8 +59,37 @@ export default function Post({ post }: { post: PostInterface }) {
     }
   }, [post?.author_uid, post?.is_anonymous]);
 
+  const handleDelete = async () => {
+    if (!profileData?.uid || !post.author_uid || profileData.uid !== post.author_uid) {
+      setErrorMessage("You can only delete your own posts");
+      return;
+    }
+
+    if (!confirm("Are you sure you want to delete this post? This action cannot be undone.")) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const result = await deletePost(post.id, profileData.uid);
+      if (result.success) {
+        onPostDeleted?.();
+      } else {
+        setErrorMessage(result.error || "Failed to delete post");
+      }
+    } catch (error: any) {
+      setErrorMessage(error.message || "Failed to delete post");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+ 
+
+  const isOwner = profileData?.uid && post.author_uid && profileData.uid === post.author_uid;
+
   return (
-    <div className="mt-4 bg-[var(--aj-background-substitute)] text-[var(--aj-foreground)] rounded-2xl flex flex-col gap-4">
+  <div className="mt-4 bg-[var(--aj-background-substitute)] text-[var(--aj-foreground)] rounded-2xl flex flex-col gap-4 items-center justify-center">
       <div className="p-4 pb-0">
         <div className="flex gap-3 items-center">
           {!post?.is_anonymous && post?.author_uid ? (
@@ -72,43 +109,36 @@ export default function Post({ post }: { post: PostInterface }) {
           ) : (
             <div className="text-sm opacity-70">Anonymous</div>
           )}
-          {post?.category && (
-            <span className="ml-auto text-xs bg-[var(--aj-primary)]/10 text-[var(--aj-primary)] px-2 py-1 rounded">
-              {post.category}
-            </span>
-          )}
+          <div className="flex gap-2 ml-auto">
+            {post?.category && (
+              <span className="text-xs bg-[var(--aj-primary)]/10 text-[var(--aj-primary)] px-2 py-1 rounded">
+                {post.category}
+              </span>
+            )}
+            {isOwner &&(
+              <>
+                <button
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="text-red-500 hover:text-red-700 p-1 disabled:opacity-50"
+                  title="Delete post"
+                >
+                  <FaTrash size={14} />
+                </button>
+              </>
+            )}
+          </div>
         </div>
-        <h2 className="text-lg">{post?.title}</h2>
-        <p className="text-base">{post?.description}</p>
-      </div>
-      <div className="relative aspect-[16/9] w-full">
-        {post?.video ? (
-          <video controls className="w-full h-full object-cover">
-            <source src={post.video} />
-          </video>
-        ) : (
-          <img
-            src={
-              post?.image ??
-              "https://images.unsplash.com/photo-1541140134513-85a161dc4a00?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            }
-            alt={post?.title ?? "Title"}
-            className="w-full h-full object-cover object-center "
-          />
+        {post.image && (
+          <div className="mt-4 flex justify-center">
+            <img
+              src={post.image}
+              alt={post.title || "Post image"}
+              className="rounded-lg object-cover max-w-full max-h-[400px]"
+              style={{ display: 'block', margin: '0 auto' }}
+            />
+          </div>
         )}
-      </div>
-      <div className="p-4 pt-0">
-        <div className="grid grid-cols-3">
-          <div className="flex items-center justify-center">
-            <BiSolidUpvote />
-          </div>
-          <div className="flex items-center justify-center">
-            <FaComment />
-          </div>
-          <div className="flex items-center justify-center">
-            <BiSolidDownvote />
-          </div>
-        </div>
       </div>
     </div>
   );

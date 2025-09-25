@@ -18,7 +18,7 @@ export default function CreatePost({ onPostCreated }: { onPostCreated?: () => vo
   const [image, setImage] = useState<string | undefined>();
   const [video, setVideo] = useState<string | undefined>();
   const [crimeTime, setCrimeTime] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
+  const [crime_type, setCrimeType] = useState<string>("");
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
 
   const [Loading, setLoading] = useState<boolean>(false);
@@ -45,7 +45,7 @@ export default function CreatePost({ onPostCreated }: { onPostCreated?: () => vo
     district,
     image,
     video,
-    category,
+  crime_type,
     is_anonymous: isAnonymous,
     crimeTime,
     postTime,
@@ -67,7 +67,7 @@ export default function CreatePost({ onPostCreated }: { onPostCreated?: () => vo
           district: district!,
           image: image || null,
           video: video || null,
-          category: (category || 'Other'),
+          crime_type: (crime_type || 'Other'),
           is_anonymous: isAnonymous,
           crime_time: crimeTime!,
           post_time: postTime,
@@ -191,13 +191,13 @@ export default function CreatePost({ onPostCreated }: { onPostCreated?: () => vo
 
             <div className="grid grid-cols-2 gap-4">
               <div className="element flex flex-col gap-2">
-                <label htmlFor="category">Category:</label>
+                <label htmlFor="crimeType">Category:</label>
                 <select
                   className="bg-[var(--aj-background)] px-4 py-2 text-base rounded-lg"
-                  id="category"
-                  value={category}
+                  id="crime_type"
+                  value={crime_type}
                   required
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => setCrimeType(e.target.value)}
                 >
                   <option value="">--</option>
                   {React.Children.toArray([
