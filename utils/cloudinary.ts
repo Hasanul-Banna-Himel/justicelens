@@ -10,6 +10,25 @@ const cld = new Cloudinary({
 
 export default cld;
 
+function getMimeType(filename: string | undefined) {
+  if (!filename) return "application/octet-stream";
+  const extension = filename.split(".").pop()?.toLowerCase();
+  if (!extension) return "application/octet-stream";
+
+  switch (extension) {
+    case "jpg":
+    case "jpeg":
+      return "image/jpeg";
+    case "png":
+      return "image/png";
+    case "gif":
+      return "image/gif";
+    // Add other mime types as needed
+    default:
+      return "application/octet-stream";
+  }
+}
+
 export async function uploadImage(
   uri: string,
   folder: string = "justice-lens",
@@ -18,9 +37,12 @@ export async function uploadImage(
   const formData = new FormData();
   const filename = uri.split("/").pop();
 
-  // Assuming uri is a local file URI, convert it to a Blob
-  const response = await fetch(uri);
-  const blob = await response.blob();
+  const mimeType = getMimeType(filename);
+  const file: any = {
+    uri: uri,
+    type: mimeType,
+    name: filename,
+  };
 
   console.log("Cloud Name:", process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME);
   console.log(
@@ -28,7 +50,7 @@ export async function uploadImage(
     process.env.EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET
   );
 
-  formData.append("file", blob, filename);
+  formData.append("file", file);
   const preset = process.env.EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
   if (!preset) throw new Error("Missing EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET");
   formData.append("upload_preset", preset);
