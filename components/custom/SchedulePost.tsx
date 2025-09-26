@@ -4,7 +4,7 @@ import { postInterface } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import React, { useMemo } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function SchedulePost({
   postData,
@@ -18,6 +18,16 @@ export default function SchedulePost({
     return usersDataGlobal?.find((el) => el.id === postData?.author_uid);
   }, [postData?.author_uid, usersDataGlobal]);
 
+  const handleUpvote = () => {
+    Alert.alert("Upvote feature coming soon!");
+  };
+  const handleDownvote = () => {
+    Alert.alert("Downvote feature coming soon!");
+  };
+  const handleComment = () => {
+    Alert.alert("Comment feature coming soon!");
+  };
+
   return (
     <View
       style={[
@@ -28,12 +38,11 @@ export default function SchedulePost({
       <View style={styles.header}>
         <View style={styles.authorInfo}>
           <Image
-            source={{
-              uri:
-                userProfile?.photo_url && !postData?.is_anonymous
-                  ? userProfile?.photo_url
-                  : require("@/assets/images/auth/female.png"),
-            }}
+            source={
+              userProfile?.photo_url && !postData?.is_anonymous
+                ? userProfile?.photo_url
+                : require("@/assets/images/auth/male.png")
+            }
             style={styles.avatar}
           />
           <View>
@@ -67,15 +76,15 @@ export default function SchedulePost({
 
       <View style={styles.footer}>
         <View style={styles.actionsContainer}>
-          <View style={styles.actionItem}>
+          <Pressable onPress={handleUpvote} style={styles.actionItem}>
             <Ionicons name="arrow-up" size={24} color={theme.text} />
-          </View>
-          <View style={styles.actionItem}>
+          </Pressable>
+          <Pressable onPress={handleComment} style={styles.actionItem}>
             <Ionicons name="chatbubble-outline" size={24} color={theme.text} />
-          </View>
-          <View style={styles.actionItem}>
+          </Pressable>
+          <Pressable onPress={handleDownvote} style={styles.actionItem}>
             <Ionicons name="arrow-down" size={24} color={theme.text} />
-          </View>
+          </Pressable>
         </View>
       </View>
     </View>
