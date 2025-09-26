@@ -1,0 +1,6 @@
+# Ignore web placeholder files
+web-placeholder/
+app.py
+requirements.txt
+startup.txt
+docs/
