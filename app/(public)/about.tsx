@@ -32,93 +32,79 @@ export default function AboutScreen() {
             About &lsquo;JUSTICELENS&rsquo;
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            JUSTICELENS is a mobile application designed to facilitate safe and
-            convenient transportation for university students. The app connects
-            students who share similar schedules and routes, allowing them to
-            coordinate rides to and from campus. By promoting carpooling among
-            students, JUSTICELENS aims to reduce transportation costs, minimize
-            environmental impact, and enhance the overall commuting experience.
+            JUSTICELENS is a web application designed to let users post incidents
+            and verify their authenticity. The app leverages AI-powered tools to
+            analyze images and generate automated descriptions, making it easier
+            to evaluate and cross-check reported events. By combining community
+            reporting with intelligent verification, JUSTICELENS aims to bring
+            transparency, accountability, and awareness to critical issues.
           </Text>
+
           <Text style={[styles.title, { color: theme.secondary }]}>
             About The Developer
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
             JUSTICELENS is developed by{" "}
             <Link
-              href={"https://akhlak.dev"}
+              href={"https://github.com/Hasanul-Banna-Himel"}
               style={[
                 { color: theme.primary, textDecorationLine: "underline" },
               ]}
             >
-              Akhlak Hossain Jim
+              Hasanul Banna Himel
             </Link>
-            , a passionate developer dedicated to creating solutions that make a
-            difference. With a strong background in software development and a
-            keen interest in addressing real-world challenges, Akhlak has poured
-            his expertise and creativity into building JUSTICELENS. His
-            commitment to enhancing student life through technology is evident
-            in every aspect of the app. To support his cause, and for more
-            information about Akhlak and his work, visit{" "}
-            <Link
-              href={"https://akhlak.dev"}
-              style={[
-                { color: theme.primary, textDecorationLine: "underline" },
-              ]}
-            >
-              akhlak.dev
-            </Link>
-            .
+            , a passionate developer who focuses on building impactful
+            technology solutions. With a strong interest in justice, AI, and
+            real-world problem solving, he has crafted JUSTICELENS as a tool to
+            empower people with information and clarity.
           </Text>
+
           <Text style={[styles.title, { color: theme.secondary }]}>
             Our Mission
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            Our mission is to create a safer, more efficient, and
-            environmentally friendly transportation option for university
-            students. We believe that by fostering a community of shared rides,
-            we can contribute to reducing traffic congestion and lowering carbon
-            emissions, while also providing students with a reliable and
-            cost-effective way to get to campus.
+            Our mission is to ensure that reported incidents are more
+            trustworthy, verifiable, and accessible. By enabling users to post,
+            check, and validate incidents, while enhancing content with AI
+            descriptions, JUSTICELENS strives to fight misinformation and
+            provide a reliable platform for truth.
           </Text>
+
           <Text style={[styles.title, { color: theme.secondary }]}>
-            Safety Measures
+            Safety & Trust
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            Safety is our top priority at JUSTICELENS. We have implemented
-            several measures to ensure that all users feel secure while using
-            the app. These include user verification processes, in-app
-            communication features, etc.
-            {/* and the ability to share ride details with trusted contacts. */}
-            We encourage all users to follow best practices for personal safety
-            and to report any concerns or issues through the app.
+            Trust is the foundation of JUSTICELENS. We are continuously working
+            on integrating verification mechanisms, community feedback, and AI
+            assistance to ensure that all shared incidents are authentic and
+            safe to consume. Users are encouraged to engage responsibly and
+            report misleading content.
           </Text>
+
           <Text style={[styles.title, { color: theme.secondary }]}>
             Contact Us
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            We value your feedback and are here to assist you with any questions
-            or concerns. If you need support or have suggestions for improving
-            JUSTICELENS, please reach out to us at{" "}
+            Have feedback, questions, or ideas to improve JUSTICELENS? Reach out
+            to us at{" "}
             <Link
-              href={"mailto:JUSTICELENS@akhlak.dev"}
+              href={"mailto:justicelens.dev@gmail.com"}
               style={[
                 { color: theme.primary, textDecorationLine: "underline" },
               ]}
             >
-              JUSTICELENS@akhlak.dev
+              justicelens.dev@gmail.com
             </Link>
-            . Your input helps us enhance the app and better serve the student
-            community.
+            . Your input is invaluable in shaping the future of this platform.
           </Text>
+
           <Text style={[styles.title, { color: theme.secondary }]}>
             Acknowledgments
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            We would like to extend our gratitude to all the students and
-            university staff who provided valuable feedback during the
-            development of JUSTICELENS. Your insights and suggestions have been
-            instrumental in shaping the app to better meet the needs of the
-            student community.
+            We thank everyone who has contributed feedback, testing, and ideas
+            during the development of JUSTICELENS. Your support and vision are
+            what drive this project forward.
           </Text>
         </ScrollView>
       </View>

@@ -32,11 +32,12 @@ export default function PrivacyPolicyScreens() {
             Privacy Policy
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            Your privacy is important to us. This Privacy Policy explains how we
-            collect, use, and protect your personal information when you use the
-            JUSTICELENS mobile application. By using our app, you agree to the
-            terms of this policy.
+            Your privacy is important to us. This Privacy Policy explains how
+            JUSTICELENS collects, uses, and protects your personal information
+            when you use our web application. By using our platform, you agree
+            to the terms outlined in this policy.
           </Text>
+
           <Text style={[styles.title, { color: theme.secondary }]}>
             Information We Collect
           </Text>
@@ -44,92 +45,102 @@ export default function PrivacyPolicyScreens() {
             We may collect the following types of information:
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            1. Personal Information: When you create an account, we collect your
-            name, university student email address, gender, address, and other
-            contact details.
+            1. **Account Information**: When you sign up, we may collect your
+            name, email address, and other necessary details to create and
+            manage your account.
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            2. Schedule Information: We collect information about your class
-            schedule to help match you with other students who have similar
-            schedules.
+            2. **Incident Data**: Content you post, including descriptions,
+            photos, and related details, which are stored securely in our
+            database.
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            3. Usage Data: We may collect information about how you use the app,
-            including your interactions with other users and your travel
-            preferences.
+            3. **AI Processing Data**: Images you upload may be analyzed by our
+            AI to generate automated descriptions or help verify authenticity.
+            These are processed securely and are not shared without consent.
           </Text>
+          <Text style={[styles.body, { color: theme.text }]}>
+            4. **Usage Data**: Information about how you use the platform,
+            including interactions, log data, and device information.
+          </Text>
+
           <Text style={[styles.title, { color: theme.secondary }]}>
             How We Use Your Information
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            We use the information we collect for the following purposes:
+            We use the information collected for the following purposes:
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            1. To provide and improve our services, including matching you with
-            other students for carpooling.
+            1. To enable posting, browsing, and verifying incidents.
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            2. To communicate with you about your account and provide customer
-            support.
+            2. To improve accuracy of AI-generated descriptions and content
+            analysis.
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            3. To send you promotional materials and updates about our services,
-            if you opt-in to receive such communications.
+            3. To maintain the safety and reliability of the platform.
           </Text>
+          <Text style={[styles.body, { color: theme.text }]}>
+            4. To communicate updates, respond to inquiries, and provide support.
+          </Text>
+
           <Text style={[styles.title, { color: theme.secondary }]}>
             Data Security
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            We implement appropriate security measures to protect your personal
-            information from unauthorized access, alteration, disclosure, or
-            destruction. However, no method of transmission over the internet or
-            method of electronic storage is 100% secure, so we cannot guarantee
-            absolute security.
+            We use industry-standard security measures to protect your
+            information against unauthorized access, alteration, disclosure, or
+            destruction. While we strive to safeguard your data, no method of
+            transmission or storage is 100% secure.
           </Text>
+
           <Text style={[styles.title, { color: theme.secondary }]}>
             Sharing Your Information
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            We do not sell, trade, or rent your personal information to third
-            parties. We may share your information with trusted third-party
-            service providers who assist us in operating our app and providing
-            our services, as long as they agree to keep your information
-            confidential.
+            We do not sell or trade your personal information. Data may only be
+            shared with trusted service providers who assist in operating the
+            platform, provided they comply with strict confidentiality
+            agreements. In cases of legal obligation, we may disclose
+            information if required by law enforcement.
           </Text>
+
           <Text style={[styles.title, { color: theme.secondary }]}>
             Your Choices
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            You can update or delete your personal information by accessing your
-            account settings within the app. You can also opt-out of receiving
-            promotional communications from us by following the unsubscribe
-            instructions in those communications.
+            You can access, update, or delete your personal information at any
+            time through your account settings. You may also choose to opt-out
+            of non-essential communications.
           </Text>
+
           <Text style={[styles.title, { color: theme.secondary }]}>
             Changes to This Privacy Policy
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            We may update this Privacy Policy from time to time. We will notify
-            you of any changes by posting the new policy on this page. You are
-            advised to review this policy periodically for any changes.
+            We may update this Privacy Policy periodically to reflect changes in
+            our practices or legal requirements. Updates will be posted on this
+            page, and we encourage you to review it regularly.
           </Text>
+
           <Text style={[styles.title, { color: theme.secondary }]}>
             Contact Us
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            If you have any questions or concerns about this Privacy Policy,
+            If you have any questions or concerns regarding this Privacy Policy,
             please contact us at{" "}
             <Text
               style={[
                 { color: theme.primary, textDecorationLine: "underline" },
               ]}
             >
-              JUSTICELENS@akhlak.dev
+              justicelens.dev@gmail.com
             </Text>
             .
           </Text>
+
           <Text style={[styles.body, { color: theme.text }]}>
-            Last updated: August 2026
+            Last updated: September 2025
           </Text>
         </ScrollView>
       </View>
