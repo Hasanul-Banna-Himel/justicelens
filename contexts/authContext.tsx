@@ -67,10 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const getUserData = async () => {
       try {
         if (DBuser?.id) {
-          const { data, error } = await supabase
-            .from("users")
-            .select("*")
-            .neq("id", DBuser.id);
+          const { data, error } = await supabase.from("users").select("*");
           if (error) throw error;
           setUsersDataGlobal(data as DBUserInterface[]);
         }
