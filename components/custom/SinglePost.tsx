@@ -43,7 +43,9 @@ export default function SinglePost({ postData }: { postData: postInterface }) {
           />
           <View>
             <Text style={[styles.authorName, { color: theme.text }]}>
-              {userProfile?.display_name ?? "Anonymous User"}
+              {userProfile?.first_name || userProfile?.last_name
+                ? userProfile?.first_name + " " + userProfile?.last_name
+                : "Anonymous User"}
             </Text>
             <Text style={[styles.time, { color: theme.text }]}>
               {postData?.post_time}
