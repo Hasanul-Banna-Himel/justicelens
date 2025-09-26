@@ -61,7 +61,7 @@ function InnerLayout() {
         }}
       /> */}
       <Tabs.Screen
-        name="schedule"
+        name="create-post"
         options={{
           title: "",
           tabBarIcon: ({ color, focused }) =>
