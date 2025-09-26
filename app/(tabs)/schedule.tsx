@@ -41,6 +41,51 @@ export default function ScheduleScreen() {
   const [crimeTime, setCrimeTime] = useState<Date>(new Date());
   const [crimeType, setCrimeType] = useState<string>("");
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
+
+  const generateAIDescription = async () => {
+    if (!image) {
+      Alert.alert("No Image", "Please select an image first.");
+      return;
+    }
+
+    setIsGenerating(true);
+    const formData = new FormData();
+    formData.append("file", {
+      uri: image,
+      name: `photo_${Date.now()}.jpg`,
+      type: "image/jpeg",
+    } as any);
+
+    try {
+      const response = await fetch(
+        "https://justicelens.onrender.com/caption/file",
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok && result.caption) {
+        setDescription(
+          (prev) =>
+            `${prev}\n\n## AI Photo Proof Description ##\n${result.caption}`
+        );
+        Alert.alert("Success", "AI description has been added successfully.");
+      } else {
+        throw new Error(result.error || "Failed to generate description.");
+      }
+    } catch (error: any) {
+      Alert.alert("Generation Failed", error.message);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const resetFields = () => {
     setTitle("");
@@ -197,6 +242,32 @@ export default function ScheduleScreen() {
             labelBackgroundColor={theme.background}
             placeholder="Select a file"
           />
+          {image && (
+            <>
+              <Pressable
+                onPress={generateAIDescription}
+                disabled={isGenerating}
+                style={[
+                  styles.ai_button,
+                  {
+                    backgroundColor: theme.background,
+                    borderColor: theme.primary,
+                  },
+                ]}
+              >
+                <Text style={[styles.ai_button_text, { color: theme.primary }]}>
+                  {isGenerating
+                    ? "Generating..."
+                    : "Generate AI Photo Proof Description"}
+                </Text>
+              </Pressable>
+              {/* <Text
+                style={[styles.ai_button_subtext, { color: theme.primary }]}
+              >
+                Use 1 token out of 5 free monthly tokens
+              </Text> */}
+            </>
+          )}
           <StyledDateTimePicker
             value={crimeTime}
             onChange={setCrimeTime}
@@ -299,9 +370,30 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: Platform.OS === "ios" ? 48 : 0,
   },
+  ai_button: {
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderRadius: 8,
+    borderWidth: 1,
+    fontWeight: "500",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    marginVertical: 8,
+  },
   button_text: {
     fontSize: 18,
     fontWeight: "600",
+  },
+  ai_button_text: {
+    fontSize: 12,
+    fontWeight: "600",
+  },
+  ai_button_subtext: {
+    fontSize: 12,
+    fontWeight: "600",
+    textAlign: "right",
+    marginBottom: 8,
   },
   error_text: {
     textAlign: "center",
