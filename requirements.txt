@@ -1,6 +1,4 @@
 fastapi
-uvicorn[standard]
+uvicorn
 python-multipart
-azure-ai-vision
-python-dotenv
-gunicorn
+git+https://github.com/Azure/azure-sdk-for-python.git#subdirectory=sdk/ai/azure-ai-vision
