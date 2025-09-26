@@ -11,7 +11,9 @@ export default function SinglePost({ postData }: { postData: postInterface }) {
   const { usersDataGlobal } = useAuth();
 
   const userProfile = useMemo(() => {
-    return usersDataGlobal?.find((el) => el.id === postData?.author_uid);
+    return usersDataGlobal?.find(
+      (el) => `${el.id}` === `${postData?.author_uid}`
+    );
   }, [postData?.author_uid, usersDataGlobal]);
 
   const handleUpvote = () => {
