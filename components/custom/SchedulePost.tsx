@@ -30,9 +30,9 @@ export default function SchedulePost({
           <Image
             source={{
               uri:
-                userProfile?.photoURL && !postData?.is_anonymous
-                  ? userProfile?.photoURL
-                  : require("@/assets/images/auth/male.png"),
+                userProfile?.photo_url && !postData?.is_anonymous
+                  ? userProfile?.photo_url
+                  : require("@/assets/images/auth/female.png"),
             }}
             style={styles.avatar}
           />
