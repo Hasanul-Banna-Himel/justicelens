@@ -9,8 +9,9 @@ import dist from "@/data/districts.json";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import ContainerGlobalClean from "@/layout/ContainerGlobalClean";
 import { District, DistrictData, Division, postInterface } from "@/types";
+import { deleteImage } from "@/utils/cloudinary";
 import { PostID } from "@/utils/functions/generation";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -28,6 +29,7 @@ export default function ScheduleScreen() {
   const DIVISIONData: DistrictData = dist;
   const { user } = useAuth();
   const { AddPost, loadingPosts, postError } = usePostContext();
+  const navigation = useNavigation();
 
   const pid = PostID();
 
@@ -42,6 +44,8 @@ export default function ScheduleScreen() {
   const [crimeType, setCrimeType] = useState<string>("");
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
+
+  const hasUnsavedChanges = Boolean(title || description || image);
 
   const generateAIDescription = async () => {
     if (!image) {
@@ -74,7 +78,10 @@ export default function ScheduleScreen() {
       if (response.ok && result.caption) {
         setDescription(
           (prev) =>
-            `${prev}\n\n## AI Photo Proof Description ##\n${result.caption}`
+            `${prev}
+
+## AI Photo Proof Description ##
+${result.caption}`
         );
         Alert.alert("Success", "AI description has been added successfully.");
       } else {
@@ -155,6 +162,35 @@ export default function ScheduleScreen() {
   useEffect(() => {
     setThana("");
   }, [district]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+      if (!hasUnsavedChanges) {
+        return;
+      }
+
+      e.preventDefault();
+
+      Alert.alert(
+        "Discard changes?",
+        "You have unsaved changes. Are you sure to discard them and leave the screen?",
+        [
+          { text: "Don't leave", style: "cancel", onPress: () => {} },
+          {
+            text: "Discard",
+            style: "destructive",
+            onPress: async () => {
+              if (image) await deleteImage(image);
+              resetFields();
+              navigation.dispatch(e.data.action);
+            },
+          },
+        ]
+      );
+    });
+
+    return unsubscribe;
+  }, [navigation, hasUnsavedChanges]);
 
   return (
     <ContainerGlobalClean>
