@@ -3,96 +3,399 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JusticeLens - Know the Truth</title>
+    <title>JusticeLens - A Safer Bangladesh, Together</title>
     <style>
+      :root {
+        --primary-color: #0056b3;
+        --secondary-color: #333;
+        --background-color: #ffffff;
+        --surface-color: #f8f9fa;
+        --text-color: #212529;
+        --light-gray: #6c757d;
+      }
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           Helvetica, Arial, sans-serif;
         line-height: 1.6;
-        padding: 20px;
-        max-width: 800px;
-        margin: auto;
-        background-color: #f2f0eb;
-        color: #37402b;
+        margin: 0;
+        background-color: var(--background-color);
+        color: var(--text-color);
       }
       .container {
-        background-color: #fcfffa;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 20px;
       }
-      h1 {
-        color: #37402b;
+      header {
+        background: var(--background-color);
+        padding: 0.8rem 0;
+        border-bottom: 1px solid #dee2e6;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
       }
-      p {
-        text-align: justify;
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
-      .button-container {
+      nav .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+      }
+      nav ul {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin: auto 0;
+      }
+      nav a {
+        text-decoration: none;
+        color: var(--secondary-color);
+        font-weight: 500;
+      }
+      .hero {
         text-align: center;
-        margin-top: 30px;
+        padding: 6rem 0;
+        background: var(--surface-color);
+      }
+      .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+      }
+      .hero p {
+        font-size: 1.25rem;
+        color: var(--light-gray);
+        margin-bottom: 2rem;
       }
       .button {
         display: inline-block;
-        background-color: #37402b;
-        color: #ffffff;
-        padding: 12px 24px;
+        background-color: var(--primary-color);
+        color: #fff;
+        padding: 14px 28px;
         text-decoration: none;
         border-radius: 5px;
         font-weight: bold;
-        margin: 0 10px;
+        transition: background-color 0.3s ease;
+      }
+      .button:hover {
+        background-color: #004494;
       }
       .button.secondary {
-        background-color: #303030;
+        background-color: var(--secondary-color);
+      }
+      .button.secondary:hover {
+        background-color: #222;
+      }
+      section {
+        padding: 5rem 0;
+      }
+      .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+      }
+      .mission-vision {
+        background: var(--surface-color);
+        text-align: center;
+      }
+      .mission-vision .content {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3rem;
+        justify-content: center;
+      }
+      .mission-vision .item {
+        max-width: 400px;
+      }
+      .mission-vision h3 {
+        font-size: 1.8rem;
+        color: var(--primary-color);
+      }
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+      .feature-card {
+        background: var(--surface-color);
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+      .feature-card h3 {
+        font-size: 1.5rem;
+        margin-top: 1rem;
+      }
+      .cta-section {
+        background-color: var(--primary-color);
+        color: #fff;
+        text-align: center;
+        border-radius: 8px;
+      }
+      .cta-section h2 {
+        font-size: 2rem;
+      }
+      .contributors {
+        text-align: center;
+      }
+      .contributor-avatars {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        min-height: 60px;
+      }
+      .contributor-avatars img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 3px solid var(--primary-color);
+        transition: transform 0.2s ease;
+      }
+      .contributor-avatars a:hover img {
+        transform: scale(1.1);
       }
       footer {
+        background: var(--secondary-color);
+        color: #fff;
         text-align: center;
-        margin-top: 40px;
-        font-size: 0.9em;
-        color: #303030;
+        padding: 2rem 0;
       }
       footer a {
-        color: #37402b;
+        color: #fff;
         text-decoration: none;
+        margin: 0 10px;
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>Welcome to JusticeLens</h1>
-      <p>
-        <strong>JusticeLens</strong> is a mobile application designed to bring
-        transparency and accountability by allowing users to post incidents and
-        verify their authenticity. Our platform leverages AI-powered tools to
-        analyze images and generate automated descriptions, making it easier to
-        evaluate and cross-check reported events.
-      </p>
-      <p>
-        By combining community reporting with intelligent verification,
-        JusticeLens aims to fight misinformation and provide a reliable platform
-        for truth.
-      </p>
-      <!-- <div class="button-container">
-        <a
-          href="mailto:justicelens.dev@gmail.com?subject=Join JusticeLens Wishlist"
-          class="button"
-          >Join The Wishlist</a
-        >
-        <a
-          href="mailto:justicelens.dev@gmail.com?subject=Become a Beta Tester"
-          class="button secondary"
-          >Become a Beta Tester</a
-        >
-      </div> -->
-    </div>
+    <header>
+      <div class="container">
+        <nav>
+          <div class="logo">
+            <img
+              style="width: 100px; height: auto"
+              src="./logo.svg"
+              alt="logo"
+            />
+            🇧🇩
+          </div>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#contribute">Contribute</a></li>
+            <li>
+              <a href="#beta-tester" class="button secondary">Join Beta</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section id="hero" class="hero">
+        <div class="container">
+          <h1>A Safer Bangladesh, Together.</h1>
+          <p>
+            A community-driven safety and crime reporting platform to bring
+            transparency, accountability, and awareness.
+          </p>
+          <a href="https://forms.gle/GyrNBmGvH8snD1RN9" class="button"
+            >Become a Beta Tester</a
+          >
+          <a
+            href="https://github.com/Hasanul-Banna-Himel/justicelens"
+            class="button secondary"
+            style="margin-left: 10px"
+            >View on GitHub</a
+          >
+        </div>
+      </section>
+
+      <section id="mission-vision" class="mission-vision">
+        <div class="container">
+          <div class="content">
+            <div class="item">
+              <h3>Our Mission</h3>
+              <p>
+                To empower the citizens of Bangladesh to voice out against
+                injustices, build a safe and transparent community, and ensure
+                their voices are heard by the right authorities. We aim to
+                create a platform that is not only a crime reporting tool but
+                also a symbol of hope and trust for the people.
+              </p>
+            </div>
+            <div class="item">
+              <h3>Our Vision</h3>
+              <p>
+                We envision a future where every citizen of Bangladesh feels
+                safe and secure in their community. A Bangladesh where
+                technology and community collaboration have eradicated the
+                barriers to justice, and where every individual has the power to
+                make a difference.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="features">
+        <div class="container">
+          <h2 class="section-title">Key Features</h2>
+          <div class="features-grid">
+            <div class="feature-card">
+              <h3>📢 Crime Reporting</h3>
+              <p>
+                Comprehensive and anonymous crime reporting with image uploads
+                and location detection, using Bangladesh-specific categories.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3>👥 Community Verification</h3>
+              <p>
+                A community-based upvote/downvote system and collaborative
+                fact-checking to ensure the authenticity of reports.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3>📊 Analytics & Insights</h3>
+              <p>
+                Interactive crime heatmaps, district-wise statistics, and trend
+                analysis to provide data-driven safety insights.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contribute" class="cta-section">
+        <div class="container" style="padding: 4rem 2rem">
+          <h2>Help Build the Future of Safety</h2>
+          <p>
+            JusticeLens is an open-source project, and we welcome contributions
+            from the community. Whether you're a developer, designer, or just
+            passionate about our mission, you can make a difference.
+          </p>
+          <a
+            href="https://github.com/Hasanul-Banna-Himel/justicelens"
+            class="button secondary"
+            >Contribute on GitHub</a
+          >
+        </div>
+      </section>
+
+      <section id="contributors" class="contributors">
+        <div class="container">
+          <h2 class="section-title">Our Contributors</h2>
+          <p>
+            This project is made possible by a passionate team and open-source
+            contributors.
+          </p>
+          <div class="contributor-avatars">
+            <p>Loading contributors...</p>
+          </div>
+          <p style="margin-top: 2rem">
+            <a
+              href="https://github.com/Hasanul-Banna-Himel/justicelens/graphs/contributors"
+              >View all contributors on GitHub</a
+            >
+          </p>
+        </div>
+      </section>
+
+      <section id="sponsor" class="cta-section" style="background-color: #333">
+        <div class="container" style="padding: 4rem 2rem">
+          <h2>Support Our Mission</h2>
+          <p>
+            Your sponsorship helps us cover server costs, development, and
+            outreach, allowing us to keep the platform free and accessible for
+            everyone in Bangladesh.
+          </p>
+          <a
+            href="https://github.com/sponsors/Hasanul-Banna-Himel"
+            class="button"
+            >Sponsor on GitHub</a
+          >
+        </div>
+      </section>
+
+      <section id="beta-tester" class="mission-vision">
+        <div class="container">
+          <h2 class="section-title">Become a Beta Tester</h2>
+          <p style="max-width: 700px; margin: 0 auto 2rem auto">
+            Be one of the first to use JusticeLens. Your feedback will help us
+            identify issues and improve the app before its official launch. Join
+            us in making our community safer.
+          </p>
+          <a href="https://forms.gle/GyrNBmGvH8snD1RN9" class="button"
+            >Join the Beta Program</a
+          >
+        </div>
+      </section>
+    </main>
+
     <footer>
-      <p style="text-align: center">
-        <a href="/privacy-policy.html">Privacy Policy</a> |
-        <a href="/delete-account.html">Account Deletion</a> |
-        <a href="/csae.html">Child Safety</a>
-      </p>
-      <p style="text-align: center">
-        &copy; 2025 JusticeLens. All rights reserved.
-      </p>
+      <div class="container">
+        <p>
+          <a href="/privacy-policy.html">Privacy Policy</a> |
+          <a href="/delete-account.html">Account Deletion</a> |
+          <a href="/csae.html">Child Safety</a>
+        </p>
+        <p>&copy; 2025 JusticeLens. All rights reserved.</p>
+      </div>
     </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const contributorsContainer = document.querySelector(
+          ".contributor-avatars"
+        );
+        const repoOwner = "Hasanul-Banna-Himel";
+        const repoName = "justicelens";
+        const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contributors`;
+
+        if (contributorsContainer) {
+          fetch(apiUrl)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              return response.json();
+            })
+            .then((contributors) => {
+              contributorsContainer.innerHTML = ""; // Clear the loading message
+              // Displaying top 8 contributors
+              contributors.slice(0, 8).forEach((contributor) => {
+                const contributorLink = document.createElement("a");
+                contributorLink.href = contributor.html_url;
+                contributorLink.title = `${contributor.login} (${contributor.contributions} contributions)`;
+                contributorLink.target = "_blank";
+                contributorLink.rel = "noopener noreferrer";
+
+                const avatar = document.createElement("img");
+                avatar.src = contributor.avatar_url;
+                avatar.alt = contributor.login;
+
+                contributorLink.appendChild(avatar);
+                contributorsContainer.appendChild(contributorLink);
+              });
+            })
+            .catch((error) => {
+              console.error("Error fetching contributors:", error);
+              contributorsContainer.innerHTML = `
+                        <a href="https://akhlak.dev" title="Akhlak Hossain Jim" target="_blank" rel="noopener noreferrer">
+                            <img src="https://avatars.githubusercontent.com/u/73884856?s=96&v=4" alt="Akhlak Hossain Jim">
+                        </a>
+                        <a href="https://github.com/Hasanul-Banna-Himel" title="Hasanul Banna Himel" target="_blank" rel="noopener noreferrer">
+                            <img src="https://avatars.githubusercontent.com/u/84923500?s=96&v=4" alt="Hasanul Banna Himel">
+                        </a>
+                      `;
+            });
+        }
+      });
+    </script>
   </body>
 </html>
