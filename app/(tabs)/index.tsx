@@ -1,17 +1,17 @@
-import SchedulePost from "@/components/custom/SchedulePost";
+import SinglePost from "@/components/custom/SinglePost";
 import { usePostContext } from "@/contexts/postContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import ContainerGlobalClean from "@/layout/ContainerGlobalClean";
 import LogoHeader from "@/layout/LogoHeader";
 import { postInterface } from "@/types";
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Platform,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
-  RefreshControl,
-  ActivityIndicator,
   View,
 } from "react-native";
 
@@ -45,7 +45,7 @@ export default function HomeScreen() {
 
     if (
       layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom &&
+        contentSize.height - paddingToBottom &&
       !loadingPosts &&
       hasMorePosts
     ) {
@@ -66,9 +66,7 @@ export default function HomeScreen() {
         scrollEventThrottle={16}
       >
         {POSTS.length > 0 ? (
-          POSTS.map((post, index) => (
-            <SchedulePost key={index} postData={post} />
-          ))
+          POSTS.map((post, index) => <SinglePost key={index} postData={post} />)
         ) : !loadingPosts ? (
           <Text style={[styles?.ln_text, { color: theme?.text }]}>
             No Data Found

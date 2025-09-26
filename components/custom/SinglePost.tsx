@@ -6,11 +6,7 @@ import { Image } from "expo-image";
 import React, { useMemo } from "react";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 
-export default function SchedulePost({
-  postData,
-}: {
-  postData: postInterface;
-}) {
+export default function SinglePost({ postData }: { postData: postInterface }) {
   const { theme } = useThemeColor();
   const { usersDataGlobal } = useAuth();
 
