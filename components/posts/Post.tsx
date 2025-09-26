@@ -1,80 +1,144 @@
 import { PostInterface, UserData } from "@/interfaces";
-import { db } from "@/utils/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { supabase, deletePost } from "@/utils/supabase";
 import React, { useEffect, useState } from "react";
-import { FirebaseError } from "firebase/app";
 import { BiSolidDownvote, BiSolidUpvote } from "react-icons/bi";
-import { FaComment } from "react-icons/fa";
+import { FaComment, FaTrash } from "react-icons/fa";
+import { useApp } from "@/store";
 
-export default function Post({ post }: { post: PostInterface }) {
+export default function Post({ post, onPostDeleted}: { 
+  post: PostInterface; 
+  onPostDeleted?: () => void;
+  
+}) {
+  const { profileData } = useApp();
   const [UserData, setUserData] = useState<UserData>({} as UserData);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  const [isDeleting, setIsDeleting] = useState(false);
+  
   
 
   useEffect(() => {
     const dataCall = async () => {
       try {
-        const docRef = doc(db, "users", post.author_uid);
-        const docSnap = await getDoc(docRef);
+        const { data: userData, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', post.author_uid as string)
+          .single();
 
-        const uType: UserData = docSnap.exists() ? (docSnap.data() as UserData) : { displayName: "", photoURL: "", userType: "user" };
+        if (error) {
+          throw error;
+        }
+
+        const u = userData as any
+        const uType: UserData = u ? {
+          id: u.id,
+          displayName: u.display_name,
+          photoURL: u.photo_url,
+          userType: u.user_type,
+          firstName: u.first_name,
+          lastName: u.last_name,
+          email: u.email,
+        } : { 
+          id: '', 
+          displayName: '', 
+          photoURL: '', 
+          userType: 'user' 
+        };
 
         setUserData(uType);
         setErrorMessage(undefined);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error fetching user data:", error);
-        setErrorMessage(error instanceof FirebaseError ? error.code : "Unknown error");
-      } finally {
-        
+        setErrorMessage(error.message || "Unknown error");
       }
     };
 
-    if (post?.author_uid) {
+    if (post?.author_uid && !post?.is_anonymous) {
       dataCall();
     }
-  }, [post?.author_uid, errorMessage]);
+  }, [post?.author_uid, post?.is_anonymous]);
+
+  const handleDelete = async () => {
+    if (!profileData?.uid || !post.author_uid || profileData.uid !== post.author_uid) {
+      setErrorMessage("You can only delete your own posts");
+      return;
+    }
+
+    if (!confirm("Are you sure you want to delete this post? This action cannot be undone.")) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const result = await deletePost(post.id, profileData.uid);
+      if (result.success) {
+        onPostDeleted?.();
+      } else {
+        setErrorMessage(result.error || "Failed to delete post");
+      }
+    } catch (error: any) {
+      setErrorMessage(error.message || "Failed to delete post");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+ 
+
+  const isOwner = profileData?.uid && post.author_uid && profileData.uid === post.author_uid;
 
   return (
-    <div className="mt-4 bg-[var(--aj-background-substitute)] text-[var(--aj-foreground)] rounded-2xl flex flex-col gap-4">
+  <div className="mt-4 bg-[var(--aj-background-substitute)] text-[var(--aj-foreground)] rounded-2xl flex flex-col gap-4 items-center justify-center">
       <div className="p-4 pb-0">
-        <div className="flex gap-3">
-          <div className="image relative rounded-[50%] aspect-square w-5">
+        <div className="flex gap-3 items-center">
+          {!post?.is_anonymous && post?.author_uid ? (
+            <>
+              <div className="image relative rounded-[50%] aspect-square w-5">
+                <img
+                  src={
+                    UserData?.photoURL ??
+                    "https://images.unsplash.com/photo-1541140134513-85a161dc4a00?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  }
+                  alt={UserData?.displayName ?? "User Name"}
+                  className="w-full h-full object-cover object-center rounded-[50%]"
+                />
+              </div>
+              <div className="flex">{UserData?.displayName}</div>
+            </>
+          ) : (
+            <div className="text-sm opacity-70">Anonymous</div>
+          )}
+          <div className="flex gap-2 ml-auto">
+            {post?.category && (
+              <span className="text-xs bg-[var(--aj-primary)]/10 text-[var(--aj-primary)] px-2 py-1 rounded">
+                {post.category}
+              </span>
+            )}
+            {isOwner &&(
+              <>
+                <button
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="text-red-500 hover:text-red-700 p-1 disabled:opacity-50"
+                  title="Delete post"
+                >
+                  <FaTrash size={14} />
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+        {post.image && (
+          <div className="mt-4 flex justify-center">
             <img
-              src={
-                UserData?.photoURL ??
-                "https://images.unsplash.com/photo-1541140134513-85a161dc4a00?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              }
-              alt={UserData?.displayName ?? "User Name"}
-              className="w-full h-full object-cover object-center rounded-[50%]"
+              src={post.image}
+              alt={post.title || "Post image"}
+              className="rounded-lg object-cover max-w-full max-h-[400px]"
+              style={{ display: 'block', margin: '0 auto' }}
             />
           </div>
-          <div className="flex">{UserData?.displayName}</div>
-        </div>
-        <h2 className="text-lg">{post?.title}</h2>
-        <p className="text-base">{post?.description}</p>
-      </div>
-      <div className="image relative aspect-[16/9] w-full">
-        <img
-          src={
-            post?.image ??
-            "https://images.unsplash.com/photo-1541140134513-85a161dc4a00?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          }
-          alt={post?.title ?? "Title"}
-          className="w-full h-full object-cover object-center "
-        />
-      </div>
-      <div className="p-4 pt-0">
-        <div className="grid grid-cols-3">
-          <div className="flex items-center justify-center">
-            <BiSolidUpvote />
-          </div>
-          <div className="flex items-center justify-center">
-            <FaComment />
-          </div>
-          <div className="flex items-center justify-center">
-            <BiSolidDownvote />
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

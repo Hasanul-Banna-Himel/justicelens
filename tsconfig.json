@@ -33,8 +33,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "utils/firebase/index.js",
-    "utils/upload/index.ts",
     "utils/upload/index.ts"
   ],
   "exclude": [

@@ -1,9 +1,16 @@
-import useTheme from "next-theme";
-import { useState } from "react";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 export default function ThemeSwitch() {
-  const { theme, setTheme } = useTheme();
-  const [Theme, setThemeState] = useState<boolean>(theme !== "light");
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const isDark = (resolvedTheme || theme) === "dark";
+  const [Theme, setThemeState] = useState<boolean>(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setThemeState(isDark);
+  }, [isDark]);
 
   return (
     <div
@@ -11,8 +18,9 @@ export default function ThemeSwitch() {
       role="button"
       tabIndex={0}
       onClick={() => {
-        setThemeState((p) => !p);
-        setTheme(!Theme ? "dark" : "light");
+        const nextDark = !Theme;
+        setThemeState(nextDark);
+        setTheme(nextDark ? "dark" : "light");
       }}
     >
       <div className="container w-full h-full relative">
@@ -21,13 +29,16 @@ export default function ThemeSwitch() {
             Theme ? "" : "left-0"
           }`}
         >
-          <img
+          {mounted && (
+            <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1200px-FullMoon2010.jpg"
             alt="Moon denoting dark theme"
             className={`w-full h-full object-cover object-center transition-all ease-in-out duration-300 opacity-0 absolute inset-0 ${
               Theme ? "opacity-1" : ""
             }`}
           />
+          )}
+          {mounted && (
           <img
             src="https://cdn.britannica.com/31/160431-050-C38A5086/Image-Earth-Russian-Elektro-L-weather-satellite-2012.jpg"
             alt="Earth denoting light theme"
@@ -35,6 +46,7 @@ export default function ThemeSwitch() {
               Theme ? "" : "opacity-1"
             }`}
           />
+          )}
         </div>
       </div>
     </div>

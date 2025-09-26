@@ -10,6 +10,7 @@ export default function LayoutHandler({
   children: React.ReactNode;
 }) {
   const { loggedInStatus, userLogin, lastUpdated } = useApp();
+  const [showProfilePrompt, setShowProfilePrompt] = useState(false);
 
   const [Loading, setLoading] = useState<boolean>(false);
 
@@ -44,6 +45,12 @@ export default function LayoutHandler({
       default:
         break;
     }
+    try {
+      if (sessionStorage.getItem('pendingProfileSetup') === 'yes' && sessionStorage.loggedIn === 'yes') {
+        setShowProfilePrompt(true);
+        sessionStorage.removeItem('pendingProfileSetup');
+      }
+    } catch {}
     setLoading(false);
   }, [lastUpdated]);
 
@@ -55,6 +62,13 @@ export default function LayoutHandler({
       return (
         <div className={`flex flex-col`}>
           <Header />
+          {showProfilePrompt ? (
+            <div className="w-[min(500px,100%)] mx-auto mt-4 bg-[var(--aj-background-substitute)] text-[var(--aj-foreground)] p-4 rounded-2xl">
+              <div className="text-sm mb-2">Complete your profile by adding a picture:</div>
+              {/* Lightweight inline uploader using the existing component would require routing; keep it simple with link */}
+              <a href="#profile-upload" className="underline">Open profile picture uploader in your profile section</a>
+            </div>
+          ) : null}
           {children}
         </div>
       );
