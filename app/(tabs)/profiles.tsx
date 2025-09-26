@@ -5,11 +5,39 @@ import { getAge } from "@/utils/functions/generation";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router } from "expo-router";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 export default function ProfilesScreen() {
   const { theme } = useThemeColor();
   const { DBuser, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    if (Platform.OS === "web") {
+      if (!confirm("Are you sure you want to log out?")) return;
+      signOut();
+      return;
+    }
+    Alert.alert("Log Out", "Are you sure you want to log out?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Log Out",
+        style: "destructive",
+        onPress: () => {
+          signOut();
+        },
+      },
+    ]);
+  };
 
   return (
     <ContainerGlobalClean>
@@ -116,7 +144,7 @@ export default function ProfilesScreen() {
           </View>
         </View>
         <Pressable
-          onPress={() => signOut()}
+          onPress={handleSignOut}
           style={[
             styles.sent_button,
             { backgroundColor: theme.primary, cursor: "pointer" },
