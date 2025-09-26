@@ -34,8 +34,8 @@ export default function PrivacyPolicyScreens() {
           <Text style={[styles.body, { color: theme.text }]}>
             Your privacy is important to us. This Privacy Policy explains how
             JUSTICELENS collects, uses, and protects your personal information
-            when you use our web application. By using our platform, you agree
-            to the terms outlined in this policy.
+            when you use our mobile application. By using our platform, you
+            agree to the terms outlined in this policy.
           </Text>
 
           <Text style={[styles.title, { color: theme.secondary }]}>
@@ -81,7 +81,8 @@ export default function PrivacyPolicyScreens() {
             3. To maintain the safety and reliability of the platform.
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            4. To communicate updates, respond to inquiries, and provide support.
+            4. To communicate updates, respond to inquiries, and provide
+            support.
           </Text>
 
           <Text style={[styles.title, { color: theme.secondary }]}>

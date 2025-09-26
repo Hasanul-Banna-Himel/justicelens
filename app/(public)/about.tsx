@@ -32,12 +32,13 @@ export default function AboutScreen() {
             About &lsquo;JUSTICELENS&rsquo;
           </Text>
           <Text style={[styles.body, { color: theme.text }]}>
-            JUSTICELENS is a web application designed to let users post incidents
-            and verify their authenticity. The app leverages AI-powered tools to
-            analyze images and generate automated descriptions, making it easier
-            to evaluate and cross-check reported events. By combining community
-            reporting with intelligent verification, JUSTICELENS aims to bring
-            transparency, accountability, and awareness to critical issues.
+            JUSTICELENS is a mobile application designed to let users post
+            incidents and verify their authenticity. The app leverages
+            AI-powered tools to analyze images and generate automated
+            descriptions, making it easier to evaluate and cross-check reported
+            events. By combining community reporting with intelligent
+            verification, JUSTICELENS aims to bring transparency,
+            accountability, and awareness to critical issues.
           </Text>
 
           <Text style={[styles.title, { color: theme.secondary }]}>
@@ -52,11 +53,20 @@ export default function AboutScreen() {
               ]}
             >
               Hasanul Banna Himel
+            </Link>{" "}
+            &{" "}
+            <Link
+              href={"https://akhlak.dev"}
+              style={[
+                { color: theme.primary, textDecorationLine: "underline" },
+              ]}
+            >
+              Akhlak
             </Link>
-            , a passionate developer who focuses on building impactful
-            technology solutions. With a strong interest in justice, AI, and
-            real-world problem solving, he has crafted JUSTICELENS as a tool to
-            empower people with information and clarity.
+            , passionate developers who focuses on building impactful technology
+            solutions. With a strong interest in justice, AI, and real-world
+            problem solving, he has crafted JUSTICELENS as a tool to empower
+            people with information and clarity.
           </Text>
 
           <Text style={[styles.title, { color: theme.secondary }]}>
