@@ -351,7 +351,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🔗 Related Links
 
 - [Join JusticeLens Play Store Beta Testing](https://forms.gle/GyrNBmGvH8snD1RN9)
-- [JusticeLens Mobile App](https://play.google.com/store/apps/details?id=dev.akhlak.justicelens)
+- [JusticeLens Mobile App](https://play.google.com/store/apps/details?id=dev.akhlak.justicelens.app)
 <!-- - [justicelens Admin Dashboard](https://github.com/your-org/justicelens-admin)
 - [justicelens API Documentation](https://github.com/your-org/justicelens-docs) -->
 
