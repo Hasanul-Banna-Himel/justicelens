@@ -136,10 +136,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       ]);
       if (insertError) {
         setError(insertError);
+        setLoading(false);
       }
+      setLoading(false);
     }
-
     setLoading(false);
+    router.push("/signin");
+    setError(undefined);
   };
 
   const signOut = async () => {
