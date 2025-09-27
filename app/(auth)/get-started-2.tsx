@@ -25,11 +25,10 @@ export default function GetStarted2() {
           />
           <View>
             <Text style={[styles.title, { color: theme.primary }]}>
-              Travel Safer with Fellow Students
+              Your Story Can Drive Change
             </Text>
             <Text style={[styles.subtitle, { color: theme.text }]}>
-              Connect with fellow students heading in the same direction. Share
-              rides, split costs, and enjoy a safer, more social commute.
+              Share incidents, upvote important voices, and join a movement for transparent justice.
             </Text>
           </View>
         </View>

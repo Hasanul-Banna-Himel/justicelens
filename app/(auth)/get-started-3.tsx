@@ -25,12 +25,10 @@ export default function GetStarted3() {
           />
           <View>
             <Text style={[styles.title, { color: theme.primary }]}>
-              Stay Safe: Control Your Information
+              A Social Network for Justice
             </Text>
             <Text style={[styles.subtitle, { color: theme.text }]}>
-              Our app prioritizes your privacy. We ensure your personal
-              information and sharing preferences are protected, giving you full
-              control over your data.
+              Connect, report, and upvote incidents. Together, we make justice visible.
             </Text>
           </View>
         </View>

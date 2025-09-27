@@ -25,11 +25,10 @@ export default function GetStarted1() {
           />
           <View>
             <Text style={[styles.title, { color: theme.primary }]}>
-              Find Classmates Traveling Your Path
+              Shine a Light on Incidents That Matter
             </Text>
             <Text style={[styles.subtitle, { color: theme.text }]}>
-              Connect with fellow EWU students heading in the same direction.
-              Share rides, split costs, and travel safely together.
+              Report, upvote, and verify incidents in your community. Give voices the reach they deserve.
             </Text>
           </View>
         </View>
