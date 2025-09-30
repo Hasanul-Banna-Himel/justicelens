@@ -170,6 +170,60 @@
         text-decoration: none;
         margin: 0 10px;
       }
+
+      @media (max-width: 768px) {
+        nav {
+          flex-direction: column;
+          align-items: center; /* Changed from flex-start to center */
+        }
+        nav ul {
+          flex-direction: column;
+          width: 100%;
+          gap: 1rem;
+          margin-top: 1rem;
+          padding-left: 0;
+          align-items: center; /* Added to center the list items */
+        }
+        nav ul li {
+            width: 100%;
+            text-align: center; /* Added to center the text within list items */
+        }
+        nav .button {
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+        .hero p {
+          font-size: 1.1rem;
+        }
+        .hero .button {
+          display: block;
+          margin: 1rem 0;
+        }
+        .hero .button.secondary {
+          margin-left: 0;
+        }
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+        .mission-vision .content {
+            flex-direction: column;
+            gap: 2rem;
+        }
+        section {
+            padding: 3rem 1rem;
+        }
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+        .cta-section .container {
+            padding: 3rem 1rem;
+        }
+      }
     </style>
   </head>
   <body>
