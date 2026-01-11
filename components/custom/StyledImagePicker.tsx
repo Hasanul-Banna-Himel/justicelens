@@ -21,6 +21,7 @@ interface StyledImagePickerProps {
   placeholder?: string;
   labelBackgroundColor?: string;
   style?: StyleProp<ViewStyle>;
+  aspect?: [number, number];
 }
 
 const StyledImagePicker: React.FC<StyledImagePickerProps> = ({
@@ -30,6 +31,7 @@ const StyledImagePicker: React.FC<StyledImagePickerProps> = ({
   placeholder,
   labelBackgroundColor,
   style,
+  aspect,
 }) => {
   const { theme } = useThemeColor();
   const [uploading, setUploading] = useState(false);
@@ -38,7 +40,7 @@ const StyledImagePicker: React.FC<StyledImagePickerProps> = ({
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsEditing: true,
-      aspect: [1.91, 1],
+      aspect: aspect ?? [1.91, 1],
       quality: 1,
     });
 
