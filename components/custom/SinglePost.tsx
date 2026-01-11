@@ -2,6 +2,7 @@ import { useAuth } from "@/contexts/authContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { postInterface } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
+import { format } from "date-fns";
 import { Image } from "expo-image";
 import React, { useMemo } from "react";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
@@ -45,12 +46,10 @@ export default function SinglePost({ postData }: { postData: postInterface }) {
           />
           <View>
             <Text style={[styles.authorName, { color: theme.text }]}>
-              {userProfile?.first_name || userProfile?.last_name
-                ? userProfile?.first_name + " " + userProfile?.last_name
-                : "Anonymous User"}
+              {userProfile?.display_name || "Anonymous User"}
             </Text>
             <Text style={[styles.time, { color: theme.text }]}>
-              {postData?.post_time}
+              {format(new Date(postData?.post_time), "MMM d, yyyy")}
             </Text>
           </View>
         </View>
@@ -87,6 +86,7 @@ export default function SinglePost({ postData }: { postData: postInterface }) {
           </Pressable>
         </View>
       </View>
+      <View style={{ height: 1, backgroundColor: theme.secondary, opacity: 0.2, marginHorizontal: 16 }} />
     </View>
   );
 }
