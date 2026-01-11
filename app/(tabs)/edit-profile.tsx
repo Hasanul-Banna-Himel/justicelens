@@ -116,8 +116,10 @@ export default function EditProfileScreen() {
               aspectRatio: 1,
               marginHorizontal: "auto",
               width: 120,
+              overflow: "hidden",
             }}
             placeholder="Select Profile Image"
+            aspect={[1, 1]}
           />
           <StyledSelect
             value={Gender}
