@@ -201,6 +201,6 @@ const styles = StyleSheet.create({
   },
   change_to_button: {
     textAlign: "center",
-    marginBottom: Platform.OS === "android" ? 30 : 0,
+    marginBottom: Platform.OS === "android" ? 48 : 12,
   },
 });
